@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>早期療育 職能治療評估報告 — 互動表單</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAF7F1; --card:#FFFFFF; --primary:#1F6F78; --primary-dark:#154D53;
+    --accent:#E8935B; --text:#2B2B29; --text-muted:#767268; --border:#E7E1D5;
+    --danger:#C85C4A; --radius:14px; --shadow:0 2px 10px rgba(43,43,41,0.06);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif; background:var(--bg); color:var(--text); line-height:1.6;}
+  #topbar{position:sticky; top:0; z-index:30; background:var(--card); border-bottom:1px solid var(--border); padding:14px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
+  #topbar .title{font-weight:700; font-size:16px; color:var(--primary-dark);}
+  #topbar .sub{font-size:12px; color:var(--text-muted);}
+  #dev-banner{background:#FDECEC; color:#8A2C22; font-size:12.5px; text-align:center; padding:8px;}
+
+  main{max-width:1040px; margin:0 auto; padding:20px 16px 80px; display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media (max-width:960px){ main{grid-template-columns:1fr;} }
+  .col{display:flex; flex-direction:column; gap:16px;}
+
+  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px;}
+  .card h2{font-size:16px; margin:0 0 4px; color:var(--primary-dark);}
+  .card .desc{font-size:12.5px; color:var(--text-muted); margin:0 0 14px;}
+
+  .field{margin-bottom:14px;}
+  .field:last-child{margin-bottom:0;}
+  .field label{font-weight:600; font-size:13.5px; display:block; margin-bottom:6px;}
+  input[type=text],input[type=number],input[type=date],select,textarea{
+    width:100%; padding:9px 11px; border:1px solid var(--border); border-radius:9px;
+    font-family:inherit; font-size:13.5px; background:#FFFDFB; color:var(--text);
+  }
+  textarea{resize:vertical; min-height:56px;}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--primary); outline-offset:1px; border-color:var(--primary);}
+
+  .row-2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .row-3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
+  @media (max-width:480px){ .row-2,.row-3{grid-template-columns:1fr;} }
+
+  .choice-row{display:flex; flex-wrap:wrap; gap:7px;}
+  .choice-btn{border:1px solid var(--border); background:#FFFDFB; color:var(--text); border-radius:999px; padding:7px 14px; font-size:13px; cursor:pointer; transition:.12s;}
+  .choice-btn:hover{border-color:var(--primary);}
+  .choice-btn.selected{background:var(--primary); border-color:var(--primary); color:#fff; font-weight:600;}
+
+  .subsection-title{font-weight:700; font-size:13.5px; color:var(--primary-dark); margin:16px 0 8px;}
+  .subsection-title:first-child{margin-top:0;}
+
+  button.primary{background:var(--primary); color:#fff; border:none; border-radius:10px; padding:11px 20px; font-weight:600; font-size:14.5px; cursor:pointer;}
+  button.primary:hover{background:var(--primary-dark);}
+  button.secondary{background:#F0EDE6; color:var(--text); border:none; border-radius:10px; padding:9px 16px; font-size:13.5px; cursor:pointer;}
+  button.secondary:hover{background:#E7E1D5;}
+  button:disabled{opacity:.5; cursor:not-allowed;}
+
+  #loadStatus{font-size:12.5px; color:var(--text-muted); margin-top:6px;}
+  #loadStatus.ok{color:var(--primary-dark);}
+  #loadStatus.err{color:var(--danger);}
+
+  .tool-toggle{display:flex; gap:8px; margin-bottom:4px;}
+  .tool-toggle button{flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:#FFFDFB; font-weight:700; cursor:pointer; font-size:14px;}
+  .tool-toggle button.active{background:var(--primary); color:#fff; border-color:var(--primary);}
+
+  .item-row{display:flex; align-items:center; gap:8px; padding:5px 0; border-bottom:1px dashed var(--border); font-size:12.5px;}
+  .item-row:last-child{border-bottom:none;}
+  .item-row .item-label{flex:1;}
+  .item-row select{width:120px; padding:4px 6px; font-size:12px;}
+  .item-group-label{font-weight:600; font-size:13px; margin:10px 0 4px; color:var(--text);}
+  .milestone-check-row{display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px dashed var(--border); font-size:12.5px; cursor:pointer;}
+  .milestone-check-row:last-child{border-bottom:none;}
+  .milestone-check-row input{accent-color:var(--primary); width:16px; height:16px; flex-shrink:0;}
+
+  .scroll-box{max-height:280px; overflow-y:auto; border:1px solid var(--border); border-radius:10px; padding:8px 12px; background:#FFFDFB;}
+  .grasp-item-row{padding:8px 0; border-bottom:1px dashed var(--border);}
+  .grasp-item-row:last-child{border-bottom:none;}
+  .grasp-item-head{font-size:12.5px;}
+  .grasp-item-age{color:var(--accent); font-weight:600;}
+  .grasp-item-desc{font-size:11.5px; color:var(--text-muted); margin:2px 0 4px;}
+  .grasp-item-row select{font-size:12px; padding:5px 7px;}
+  .grasp-item-row.entry-point-row{background:#FFF6EC; border-left:4px solid var(--accent); padding-left:8px; margin-left:-8px; border-radius:6px;}
+  .entry-badge{display:inline-block; margin-left:8px; background:var(--accent); color:#fff; font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px; vertical-align:middle;}
+
+  /* 即時預覽（表格） */
+  #previewCard{position:sticky; top:90px; max-height:calc(100vh - 110px); overflow-y:auto;}
+  #previewPane table{width:100%; border-collapse:collapse; font-size:12px;}
+  #previewPane th{background:#EAF3F2; color:var(--primary-dark); padding:6px 8px; border:1px solid var(--border); text-align:left; font-size:12px;}
+  #previewPane td{border:1px solid var(--border); padding:6px 8px; vertical-align:top; white-space:pre-wrap;}
+  #previewPane td.cat{font-weight:700; background:#FCFAF6;}
+  #previewPane .p-title{text-align:center; font-weight:700; font-size:15px; margin-bottom:10px; color:var(--primary-dark);}
+  #previewPane .p-empty{color:var(--danger);}
+
+  .export-bar{display:flex; gap:10px;}
+</style>
+</head>
+<body>
+
+<div id="dev-banner" style="display:none;">⚠ 尚未設定 API_URL，無法自動載入個案資料。請在檔案開頭的 API_URL 填入 Apps Script 網頁應用程式網址。</div>
+
+<div id="topbar">
+  <div>
+    <div class="title">早期療育 職能治療評估報告 — 互動表單</div>
+    <div class="sub">家長問卷資料自動帶入，專業評估區請治療師填寫</div>
+  </div>
+  <div class="export-bar">
+    <button class="secondary" onclick="resetAll()">清空重填</button>
+    <button class="primary" onclick="exportWord(event)">匯出 Word 報告</button>
+  </div>
+</div>
+
+<main>
+  <div class="col">
+
+    <div class="card">
+      <h2>選擇個案</h2>
+      <div class="desc">依評估日期挑選當天要看的個案，問卷已填寫的欄位會自動帶入下方</div>
+      <div class="row-2">
+        <div class="field"><label>評估日期</label><select id="dateSelect" onchange="onDateChange()"><option value="">請選擇日期</option></select></div>
+        <div class="field"><label>個案</label><select id="caseSelect" onchange="onCaseChange()"><option value="">請先選日期</option></select></div>
+      </div>
+      <div id="loadStatus"></div>
+    </div>
+
+    <div class="card">
+      <h2>評估工具</h2>
+      <div class="desc">選擇本次施測使用的標準化工具，「精細動作評估」與「感覺統合評估」的內容會依此切換</div>
+      <div class="tool-toggle">
+        <button id="toolBtn-pdms" onclick="setTool('pdms')">PDMS-2</button>
+        <button id="toolBtn-mabc" onclick="setTool('mabc')">MABC-2</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>基本資訊</h2>
+      <div class="row-2">
+        <div class="field"><label>個案姓名</label><input type="text" id="f_child_name" oninput="onFieldInput()"></div>
+        <div class="field"><label>評估日期</label><input type="text" id="f_eval_date" oninput="onFieldInput(); updateAgeAndEntryPoints();"></div>
+      </div>
+      <div class="row-2">
+        <div class="field"><label>個案出生日期</label><input type="text" id="f_child_dob" placeholder="yyyy-MM-dd" oninput="onFieldInput(); updateAgeAndEntryPoints();"></div>
+        <div class="field"><label>目前年齡（自動計算）</label><input type="text" id="f_ageDisplay" disabled style="background:#F0EDE6;"></div>
+      </div>
+      <div class="field"><label>評估職能治療師</label><input type="text" id="f_therapist" oninput="onFieldInput()"></div>
+    </div>
+
+    <!-- ================= 知覺動作功能：精細動作評估 ================= -->
+    <div class="card">
+      <h2>精細動作評估</h2>
+      <div class="field"><label>整體結果</label><div class="choice-row" id="c_fineMotorResult"></div></div>
+      <div class="field"><label>評估工具</label><div class="choice-row" id="c_fineMotorTools"></div></div>
+      <div class="field"><label>肌肉張力異常</label>
+        <div class="choice-row" id="c_muscleTone"></div>
+        <input type="text" id="f_muscleTonePart" placeholder="部位（若異常）" style="margin-top:6px;" oninput="onFieldInput()">
+      </div>
+
+      <div id="pdmsFineMotorBlock">
+        <div class="subsection-title">Grasping</div>
+        <div class="row-3">
+          <div class="field"><label>原始分數（自動加總）</label><input type="text" id="f_graspRawDisplay" disabled style="background:#F0EDE6;"></div>
+          <div class="field"><label>發展年齡（自動查表）</label><input type="text" id="f_graspDevAge" disabled style="background:#F0EDE6;"></div>
+          <div class="field"><label>百分位數</label><input type="text" id="f_graspPercentile" placeholder="如 16%" oninput="onFieldInput()"></div>
+        </div>
+        <div class="subsection-title">Visual-Motor Integration</div>
+        <div class="row-3">
+          <div class="field"><label>原始分數（自動加總）</label><input type="text" id="f_vmiRawDisplay" disabled style="background:#F0EDE6;"></div>
+          <div class="field"><label>發展年齡（自動查表）</label><input type="text" id="f_vmiDevAge" disabled style="background:#F0EDE6;"></div>
+          <div class="field"><label>百分位數</label><input type="text" id="f_vmiPercentile" placeholder="如 9%" oninput="onFieldInput()"></div>
+        </div>
+        <div class="field"><label>發展商數（精細動作綜合）</label><input type="text" id="f_fineMotorQuotient" placeholder="如 79" oninput="onFieldInput()"></div>
+
+        <div class="subsection-title">抓握能力（Grasping）逐項評估</div>
+        <div class="scroll-box" id="grasp_items" style="max-height:360px;"></div>
+        <div class="field" style="margin-top:8px;"><label>抓握能力（補充敘述，選填）</label><textarea id="f_graspNote" oninput="onFieldInput()"></textarea></div>
+
+        <div class="subsection-title">視動整合能力（VMI）逐項評估</div>
+        <div class="scroll-box" id="vmi_items" style="max-height:360px;"></div>
+        <div class="field" style="margin-top:8px;"><label>視動整合能力（補充敘述，選填）</label><textarea id="f_vmiNote" oninput="onFieldInput()"></textarea></div>
+      </div>
+
+      <div id="mabcFineMotorBlock" style="display:none;">
+        <div class="field"><label>整體精細動作百分比</label><input type="text" id="f_mabcOverallPercentage" oninput="onFieldInput()"></div>
+        <div class="field"><label>手部靈活度</label><textarea id="f_mabcHandDexterity" oninput="onFieldInput()"></textarea></div>
+        <div class="field"><label>雙手協調表現</label><textarea id="f_mabcBilateralCoordination" oninput="onFieldInput()"></textarea></div>
+        <div class="field"><label>工具操作表現</label><textarea id="f_mabcToolManipulation" oninput="onFieldInput()"></textarea></div>
+      </div>
+
+      <div class="field"><label>一般臨床觀察</label><textarea id="f_fineMotorObservation" oninput="onFieldInput()"></textarea></div>
+
+      <div class="subsection-title">精細動作訓練</div>
+      <div class="field"><label>訓練需求</label><div class="choice-row" id="c_fineMotorTrainingNeed"></div></div>
+      <div class="field"><label>訓練方向（可複選）</label><div class="choice-row" id="c_fineMotorGoals"></div></div>
+      <div class="field"><label>具體建議</label><textarea id="f_fineMotorSuggestion" oninput="onFieldInput()"></textarea></div>
+    </div>
+
+    <!-- ================= 知覺動作功能：感覺統合評估 ================= -->
+    <div class="card">
+      <h2>感覺統合評估</h2>
+      <div class="field"><label>整體結果</label><div class="choice-row" id="c_siResult"></div></div>
+      <div class="field"><label>評估工具</label><div class="choice-row" id="c_siTools"></div></div>
+
+      <div id="mabcSensoryBlock" style="display:none;">
+        <div class="subsection-title">感覺調節問題</div>
+        <div class="choice-row" id="c_siRegulation"></div>
+        <div class="subsection-title">姿勢維持困難</div>
+        <div class="choice-row" id="c_siPosture"></div>
+        <input type="text" id="f_siPostureSeconds" placeholder="未完成俯臥伸直，維持__秒" style="margin-top:6px;" oninput="onFieldInput()">
+        <div class="subsection-title">兩側整合與順序問題</div>
+        <div class="choice-row" id="c_siBilateral"></div>
+        <div class="subsection-title">體感覺運用能力障礙</div>
+        <div class="choice-row" id="c_siSomatodyspraxia"></div>
+        <input type="text" id="f_siSomatoSeconds" placeholder="未完成仰臥彎曲，維持__秒" style="margin-top:6px;" oninput="onFieldInput()">
+        <div class="subsection-title">其他中樞神經系統不成熟之問題</div>
+        <div class="choice-row" id="c_siOtherCns"></div>
+      </div>
+
+      <div class="field" style="margin-top:12px;"><label>一般臨床觀察／行為觀察及綜合結果</label><textarea id="f_siObservation" oninput="onFieldInput()"></textarea></div>
+
+      <div class="subsection-title">感覺統合訓練</div>
+      <div class="field"><label>訓練需求</label><div class="choice-row" id="c_siTrainingNeed"></div></div>
+      <div class="field"><label>訓練方向（可複選）</label><div class="choice-row" id="c_siGoals"></div></div>
+      <div class="field"><label>具體建議</label><textarea id="f_siSuggestion" oninput="onFieldInput()"></textarea></div>
+    </div>
+
+    <!-- ================= 日常生活功能 domains（由JS動態產生） ================= -->
+    <div id="domainsContainer"></div>
+
+    <!-- ================= 遊戲活動（特殊：含學校教育） ================= -->
+    <div class="card">
+      <h2>遊戲活動評估</h2>
+      <div class="field"><label>整體結果</label><div class="choice-row" id="c_play_evalResult"></div></div>
+      <div class="field"><label>評估工具</label><div class="choice-row" id="c_play_tools"></div></div>
+      <div class="field"><label>行為觀察及綜合結果</label><textarea id="f_play_narrative" oninput="onFieldInput()"></textarea></div>
+
+      <div class="subsection-title">學校教育（自動帶入問卷資料，可編輯）</div>
+      <div class="field"><label>就學狀況</label><input type="text" id="f_school_status" oninput="onFieldInput()"></div>
+      <div class="field"><label>認知能力</label><input type="text" id="f_cognitive" oninput="onFieldInput()"></div>
+      <div class="field"><label>學習態度</label><input type="text" id="f_learning_attitude" oninput="onFieldInput()"></div>
+      <div class="field"><label>配合度</label><input type="text" id="f_cooperation" oninput="onFieldInput()"></div>
+      <div class="field"><label>注意力</label><input type="text" id="f_attention" oninput="onFieldInput()"></div>
+      <div class="field"><label>衝動控制</label><input type="text" id="f_impulse_control" oninput="onFieldInput()"></div>
+      <div class="field"><label>指令理解</label><input type="text" id="f_instruction_understanding" oninput="onFieldInput()"></div>
+
+      <div class="subsection-title">遊戲訓練</div>
+      <div class="field"><label>訓練需求</label><div class="choice-row" id="c_play_trainingNeed"></div></div>
+      <div class="field"><label>訓練方向（可複選）</label><div class="choice-row" id="c_play_goals"></div></div>
+      <div class="field"><label>具體建議</label><textarea id="f_play_suggestion" oninput="onFieldInput()"></textarea></div>
+    </div>
+
+  </div>
+
+  <div class="col">
+    <div class="card" id="previewCard">
+      <h2>即時預覽</h2>
+      <div class="desc">與匯出的 Word 報告內容一致（表格呈現，匯出時另套標楷體）</div>
+      <div id="previewPane"></div>
+    </div>
+  </div>
+</main>
+
+<!-- docx 函式庫改在按下「匯出」時才載入 -->
+<script>
+const DOCX_CDN_CANDIDATES = [
+  "https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js",
+  "https://unpkg.com/docx@8.5.0/build/index.umd.min.js",
+  "https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js",
+  "https://unpkg.com/docx@8.5.0/build/index.umd.js"
+];
+function loadScriptTag_(src){
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error("載入失敗：" + src));
+    document.head.appendChild(s);
+  });
+}
+async function ensureDocxLoaded(){
+  if(typeof docx !== "undefined") return true;
+  for(const url of DOCX_CDN_CANDIDATES){
+    try{ await loadScriptTag_(url); if(typeof docx !== "undefined") return true; }catch(e){}
+  }
+  return typeof docx !== "undefined";
+}
+</script>
+
+<script>
+/* =========================================================
+   設定
+   ========================================================= */
+const API_URL = "https://script.google.com/macros/s/AKfycbyNW6DVfgdteZ8tirAsRqOwXkX6Dxuulpvf8kI07BjR3c34XqI-g7dv7_JNTegnJCDbkg/exec";
+
+/* =========================================================
+   PDMS-2 常模對照：原始分數 → 發展年齡（月齡）
+   來源：PDMS-2 手冊 Table C.1 Converting Raw Scores to Age Equivalents
+   （僅整理 Grasping／Visual-Motor Integration 兩個分測驗所需欄位）
+   ========================================================= */
+const AGE_EQUIVALENT_TABLE = [
+  {age:1,  gr:[1,8],   vi:[1,7]},
+  {age:2,  gr:[9,11],  vi:[8,12]},
+  {age:3,  gr:[12,14], vi:[13,16]},
+  {age:4,  gr:[15,19], vi:[17,19]},
+  {age:5,  gr:[20,24], vi:[20,22]},
+  {age:6,  gr:[25,28], vi:[23,28]},
+  {age:7,  gr:[29,31], vi:[29,34]},
+  {age:8,  gr:[32,33], vi:[35,39]},
+  {age:9,  gr:[34,35], vi:[40,45]},
+  {age:10, gr:[36,36], vi:[46,52]},
+  {age:11, gr:[37,37], vi:[53,58]},
+  {age:12, gr:[38,38], vi:[59,64]},
+  {age:13, gr:[39,39], vi:[65,68]},
+  {age:14, gr:[40,40], vi:[69,72]},
+  {age:15, gr:[41,41], vi:[73,75]},
+  {age:16, gr:null,    vi:[76,76]},
+  {age:17, gr:null,    vi:[77,78]},
+  {age:18, gr:null,    vi:[79,81]},
+  {age:19, gr:null,    vi:[82,84]},
+  {age:20, gr:[42,42], vi:[85,86]},
+  {age:21, gr:null,    vi:[87,88]},
+  {age:22, gr:null,    vi:[89,90]},
+  {age:23, gr:null,    vi:[91,94]},
+  {age:24, gr:null,    vi:[95,95]},
+  {age:25, gr:null,    vi:[96,97]},
+  {age:26, gr:null,    vi:[98,98]},
+  {age:27, gr:null,    vi:[99,100]},
+  {age:28, gr:[43,43], vi:[101,102]},
+  {age:29, gr:null,    vi:[103,103]},
+  {age:30, gr:null,    vi:[104,105]},
+  {age:31, gr:null,    vi:[106,107]},
+  {age:32, gr:null,    vi:[108,108]},
+  {age:33, gr:null,    vi:[109,109]},
+  {age:34, gr:[44,44], vi:[110,111]},
+  {age:35, gr:null,    vi:[112,112]},
+  {age:36, gr:null,    vi:[113,113]},
+  {age:37, gr:[45,45], vi:[114,115]},
+  {age:38, gr:null,    vi:[116,116]},
+  {age:39, gr:null,    vi:[117,118]},
+  {age:40, gr:[46,46], vi:[119,120]},
+  {age:41, gr:null,    vi:[121,122]},
+  {age:42, gr:null,    vi:[123,123]},
+  {age:43, gr:[47,47], vi:[124,124]},
+  {age:44, gr:null,    vi:[125,125]},
+  {age:45, gr:null,    vi:null},
+  {age:46, gr:[48,48], vi:[126,126]},
+  {age:47, gr:null,    vi:[127,127]},
+  {age:48, gr:[49,49], vi:[128,128]},
+  {age:49, gr:null,    vi:[129,129]},
+  {age:50, gr:null,    vi:[130,130]},
+  {age:51, gr:null,    vi:[131,131]},
+  {age:52, gr:null,    vi:[132,132]},
+  {age:53, gr:null,    vi:[133,133]},
+  {age:54, gr:[50,50], vi:[134,134]},
+  {age:55, gr:null,    vi:null},
+  {age:56, gr:null,    vi:[135,135]},
+  {age:57, gr:null,    vi:[136,136]},
+  {age:58, gr:null,    vi:null},
+  {age:59, gr:null,    vi:null},
+  {age:60, gr:null,    vi:[137,137]},
+  {age:61, gr:null,    vi:null},
+  {age:62, gr:[51,51], vi:null},
+  {age:63, gr:null,    vi:[138,138]},
+  {age:64, gr:null,    vi:null},
+  {age:65, gr:null,    vi:null},
+  {age:66, gr:null,    vi:[139,139]},
+  {age:67, gr:null,    vi:null},
+  {age:68, gr:[52,52], vi:[140,140]},
+  {age:69, gr:null,    vi:null},
+  {age:70, gr:null,    vi:null},
+  {age:71, gr:null,    vi:null}
+];
+
+// 依原始分數查表得出發展年齡（月）；subtestKey 為 'gr' 或 'vi'
+// 已驗證正確的範圍上限（月齡）。超過此年齡對應的原始分數，
+// 目前尚未逐一核對過，先不自動帶出數字，避免顯示可能有誤的常模數字。
+const AGE_TABLE_VALIDATED_MAX_AGE = 48;
+
+function lookupAgeEquivalent(subtestKey, rawScore){
+  if(rawScore===null || rawScore===undefined || rawScore==="") return "";
+  const rows = AGE_EQUIVALENT_TABLE.filter(r => r[subtestKey]);
+  if(!rows.length) return "";
+  if(rawScore < rows[0][subtestKey][0]) return "<1m";
+  for(const r of rows){
+    const [lo,hi] = r[subtestKey];
+    if(rawScore >= lo && rawScore <= hi){
+      if(r.age > AGE_TABLE_VALIDATED_MAX_AGE){
+        return "⚠超出已驗證範圍，請人工核對常模表";
+      }
+      return r.age + "m";
+    }
+  }
+  // 超過表列所有已知範圍（意味著對應年齡層更大）
+  return "⚠超出已驗證範圍，請人工核對常模表";
+}
+
+const GRASP_ITEMS = [{"no": 1, "age": "1-2個月", "name": "抓握反射 (Grasping Reflex)", "desc": "小朋友仰臥時用食指刺激由拇指向掌面。", "options": [{"score": 2, "text": "小朋友手指會緊握治療師食指。"}, {"score": 1, "text": "小朋友手指鬆握治療師食指。"}, {"score": 0, "text": "小朋友手指依然打開。"}]}, {"no": 2, "age": "", "name": "抓毛巾 (Grasping Cloth)", "desc": "小朋友仰臥時手指輕刮過治療師前臂的毛巾會將其抓起。", "options": [{"score": 2, "text": "可將毛巾抓起。"}, {"score": 1, "text": "會有抓的動作但未拿起。"}, {"score": 0, "text": "手指依然張開，無抓的動作。"}]}, {"no": 3, "age": "", "name": "放開搖鈴 (Releasing Rattle-Disappearing Reflex)", "desc": "小朋友仰臥時抓握一搖鈴，在握住5秒之後，觀察還多久會放開搖鈴。", "options": [{"score": 2, "text": "再經3秒時間小朋友會放開搖鈴。"}, {"score": 1, "text": "再經4-5秒時間小朋友會放開搖鈴。"}, {"score": 0, "text": "再經5秒以上時間小朋友會放開搖鈴。"}]}, {"no": 4, "age": "", "name": "拿搖鈴 (Grasping Rattle)", "desc": "小朋友仰臥時，拿一搖鈴輕碰掌面，說「來拿搖鈴」。", "options": [{"score": 2, "text": "小朋友會抓握住搖鈴。"}, {"score": 1, "text": "小朋友會用手指去碰而未抓住。"}, {"score": 0, "text": "小朋友沒有打開手指。"}]}, {"no": 5, "age": "3-5個月", "name": "抓搖鈴 (Holding Rattle)", "desc": "小朋友仰臥時置一搖鈴於其手中。", "options": [{"score": 2, "text": "小朋友可握住搖鈴達30秒時間。"}, {"score": 1, "text": "小朋友可握住搖鈴達15-29秒時間。"}, {"score": 0, "text": "小朋友可握住搖鈴少於15秒時間。"}]}, {"no": 6, "age": "", "name": "搖動搖鈴 (Manipulating Rattle)", "desc": "小朋友仰臥時先在面前搖動搖鈴，後再置入其手中，說「搖搖鈴」。", "options": [{"score": 2, "text": "小朋友可搖動搖鈴15度。"}, {"score": 1, "text": "小朋友可搖動搖鈴4-15度。"}, {"score": 0, "text": "小朋友可搖動搖鈴少於4度。"}]}, {"no": 7, "age": "", "name": "抓搖鈴 (Grasping Rattle)", "desc": "將小朋友抱坐於腿上，於距手約8公分桌面放一搖鈴，說「來拿搖鈴」。", "options": [{"score": 2, "text": "小朋友可去抓握住搖鈴。"}, {"score": 1, "text": "小朋友只能碰觸到搖鈴。"}, {"score": 0, "text": "有伸手向前動作。"}]}, {"no": 8, "age": "6個月", "name": "拉繩子 (Pulling String)", "desc": "小朋友於俯臥時放一有繩子的玩具於面前，說「來拿玩具」。", "options": [{"score": 2, "text": "小朋友可拉住繩子得到玩具。"}, {"score": 1, "text": "小朋友可拉住或摸到繩子。"}, {"score": 0, "text": "只有看著玩具。"}]}, {"no": 9, "age": "", "name": "抓到紙張 (Securing Paper)", "desc": "將小朋友抱坐於腿上，於距手約8公分桌面放一A4紙張，說「來拿紙張」。", "options": [{"score": 2, "text": "小朋友會動手去拉紙或把紙弄破。"}, {"score": 1, "text": "小朋友只動手去碰紙。"}, {"score": 0, "text": "有伸手向前動作。"}]}, {"no": 10, "age": "", "name": "抓小方塊 (Grasping Cube)", "desc": "將小朋友抱坐於腿上，於距手約8公分桌面放一小方塊，說「來拿方塊」。", "options": [{"score": 2, "text": "小朋友會去抓方塊15秒。"}, {"score": 1, "text": "小朋友會去碰方塊15秒。"}, {"score": 0, "text": "有伸手向前動作。"}]}, {"no": 11, "age": "7-9個月", "name": "抓小方塊 (Grasping Cube)", "desc": "將小朋友抱坐於腿上，於距手約8公分桌面放一小方塊，說「來拿方塊」。觀察小朋友拿的方式。", "options": [{"score": 2, "text": "會使用第4、5指及掌面取得或使用前3指取方塊。"}, {"score": 1, "text": "使用小指及掌面取得方塊。"}, {"score": 0, "text": "使用整個掌面取得方塊。"}]}, {"no": 12, "age": "", "name": "搖動搖鈴 (Shaking Rattle)", "desc": "將小朋友抱坐於腿上，放一搖鈴於其手中，說「搖動搖鈴」。", "options": [{"score": 2, "text": "可以抓握且搖動搖鈴60秒。"}, {"score": 1, "text": "可以抓握且搖動搖鈴11-59秒。"}, {"score": 0, "text": "可以抓握且搖動搖鈴少於10秒。"}]}, {"no": 13, "age": "", "name": "搖動搖鈴 (Shaking Rattle)", "desc": "將小朋友抱坐於腿上，治療師示範搖動搖鈴90度3次後放在桌上，說「搖搖鈴」。", "options": [{"score": 2, "text": "可抓起並搖動搖鈴90度3次。"}, {"score": 1, "text": "可抓起並搖動搖鈴45-89度3次。"}, {"score": 0, "text": "抓起並搖動搖鈴少於45度或少於3次。"}]}, {"no": 14, "age": "", "name": "抓小方塊 (Grasping Cube)", "desc": "將小朋友抱坐於腿上，於距手約8公分桌面放一小方塊，說「來拿方塊」。觀察小朋友拿的方式。", "options": [{"score": 2, "text": "會單純使用前三指拿方塊(虎口可看到間隙)。"}, {"score": 1, "text": "會使用前三指拿方塊但接觸到掌面(虎口沒看到間隙)。"}, {"score": 0, "text": "用整個手掌拿方塊。"}]}, {"no": 15, "age": "10-12個月", "name": "抓小饅頭 (Grasping Pellets)", "desc": "將小朋友抱坐於腿上，於桌面放二個小饅頭，說「來拿小饅頭」。", "options": [{"score": 2, "text": "1次就把兩顆抓起。"}, {"score": 1, "text": "1次抓起1顆。"}, {"score": 0, "text": "只有去摸的動作。"}]}, {"no": 16, "age": "", "name": "抓握紙張 (Manipulation Paper)", "desc": "將小朋友抱坐於腿上，將A4紙張弄成兩半，示範用1手將紙張弄髒，說「跟我一樣把紙張弄髒」。", "options": [{"score": 2, "text": "會利用掌面將紙張弄髒(單手或雙手皆可)。"}, {"score": 1, "text": "只使用手指將紙張弄髒。"}, {"score": 0, "text": "只有拉動或摸的動作。"}]}, {"no": 17, "age": "", "name": "抓小饅頭 (Grasping Pellets)", "desc": "將小朋友抱坐於腿上，於桌面放二個小饅頭，說「來拿小饅頭」。", "options": [{"score": 2, "text": "會使用拇指及食指側夾起2顆或用拇指及食指腹夾起1顆。"}, {"score": 1, "text": "用拇指及食指腹夾起1顆。"}, {"score": 0, "text": "用整個手掌抓起2顆。"}]}, {"no": 18, "age": "13-20個月", "name": "抓小饅頭 (Grasping Pellets)", "desc": "將小朋友抱坐於腿上，於桌面放二個小饅頭，說「來拿小饅頭」。", "options": [{"score": 2, "text": "用拇指及食指腹捏起，而手腕及手臂皆離開桌面。"}, {"score": 1, "text": "用拇指及食指腹捏起，而手臂仍在桌面上。"}, {"score": 0, "text": "出現用整個手掌抓起的動作。"}]}, {"no": 19, "age": "", "name": "抓小方塊 (Grasping Cube)", "desc": "將小朋友抱坐於腿上，桌面放2個小方塊，示範單手拿起動作，放下後說「跟我一樣拿方塊」。", "options": [{"score": 2, "text": "會由小方塊上方利用前3指拿起。"}, {"score": 1, "text": "會由小方塊側邊(但沒靠在桌上)利用前3指拿起。"}, {"score": 0, "text": "用整個手掌拿方塊。"}]}, {"no": 20, "age": "21-34個月", "name": "抓小方塊 (Grasping Cube)", "desc": "將小朋友抱坐於腿上，桌面放2個小方塊，示範單手拿起動作，放下後說「跟我一樣拿方塊」。", "options": [{"score": 2, "text": "可單手同時抓起2個方塊3秒鐘。"}, {"score": 1, "text": "可單手同時抓起2個方塊少於3秒鐘。"}, {"score": 0, "text": "只能抓起1個方塊。"}]}, {"no": 21, "age": "35-71個月", "name": "拿色筆 (Grasping Marker)", "desc": "小朋友坐著，將色筆及A4的紙放於桌面，說「拿筆畫圖」。觀察拿筆的方式。", "options": [{"score": 2, "text": "以拇指及食指朝紙抓握。"}, {"score": 1, "text": "以拇指及食指朝上抓握。"}, {"score": 0, "text": "無法拿住色筆。"}]}, {"no": 22, "age": "41-42個月", "name": "拿色筆 (Grasping Marker)", "desc": "小朋友坐著，將色筆及A4的紙放於桌面，說「拿筆畫圖」。觀察拿筆的方式。", "options": [{"score": 2, "text": "可握在拇指及食指腹，餘三指彎向掌面，當畫圖時是整個手一起動。"}, {"score": 1, "text": "只可握在拇指及食指腹。"}, {"score": 0, "text": "只能用拇指及食指拿起色筆。"}]}, {"no": 23, "age": "41-42個月", "name": "解開鈕釦 (Unbuttoning Button)", "desc": "小朋友坐著，將鈕釦板放在桌上，說「快點解開鈕釦」。", "options": [{"score": 2, "text": "可在75秒內解開3個鈕釦。"}, {"score": 1, "text": "可在75秒以上解開3個鈕釦。"}, {"score": 0, "text": "只有想解開鈕釦的動作。"}]}, {"no": 24, "age": "47-48個月", "name": "扣鈕釦 (Buttoning Button)", "desc": "小朋友坐著，將鈕釦板放在桌上，先解開所有鈕釦，說「扣上一個鈕釦並快點解開他」。", "options": [{"score": 2, "text": "可在20秒內扣好並解開1個鈕釦。"}, {"score": 1, "text": "可在20秒以上扣好並解開1個鈕釦。"}, {"score": 0, "text": "無法扣與解釦。"}]}, {"no": 25, "age": "49-50個月", "name": "拿色筆 (Grasping Marker)", "desc": "小朋友坐著，將色筆及A4的紙放於桌面，說「拿筆畫圖」。觀察拿筆的方式。", "options": [{"score": 2, "text": "使用拇、食指拿筆，筆架於中指遠端指關節處。"}, {"score": 1, "text": "使用拇、食指拿筆，筆架於中指腹或其他關節處。"}, {"score": 0, "text": "只用拇、食指架筆。"}]}, {"no": 26, "age": "53-54個月", "name": "手指對碰 (Touching Fingers)", "desc": "示範拇指依序與其他四指對碰，說「跟我一樣，拇指來摸其他4個手指頭」。", "options": [{"score": 2, "text": "在8秒內以拇指去碰其他4個指頭。"}, {"score": 1, "text": "在9-12秒內以拇指去碰其他4個指頭。"}, {"score": 0, "text": "多於13秒以上以拇指去碰其他4個指頭。"}]}];
+const VMI_ITEMS = [{"no": 1, "age": "1-2個月", "name": "追蹤玩具 (Tracking Rattle)", "desc": "小朋友仰臥時在面前30公分搖一搖鈴，後往一邊移至床上，再回至中央，往另一邊再測一次。", "options": [{"score": 2, "text": "由中央往兩邊各轉90度追蹤玩具。"}, {"score": 1, "text": "追蹤玩具角度小於90度。"}, {"score": 0, "text": "只能看搖鈴時間少於3秒時間。"}]}, {"no": 2, "age": "", "name": "單側追蹤玩具 (Tracking Rattle-Side)", "desc": "小朋友仰臥時頭側向單邊，在其面前30公分搖一搖鈴，後移至正前方。", "options": [{"score": 2, "text": "兩邊皆可追蹤玩具至正前方。"}, {"score": 1, "text": "只有一邊可追蹤玩具至正前方。"}, {"score": 0, "text": "頭依然轉向一邊。"}]}, {"no": 3, "age": "", "name": "放置反射 (Placing Hand)", "desc": "將小朋友抱坐於腿上，給一動作使其手背能輕碰到桌線，觀察手的反射動作。", "options": [{"score": 2, "text": "可將手打開放置於桌上。"}, {"score": 1, "text": "手維持握拳放置於桌上。"}, {"score": 0, "text": "無法將手放置於桌上。"}]}, {"no": 4, "age": "3個月", "name": "避開搖鈴 (Perceiving Rattle)", "desc": "小朋友仰臥時在面前30公分搖一搖鈴，後慢慢移至面前2.5公分處。", "options": [{"score": 2, "text": "小朋友轉頭動作超過10度。"}, {"score": 1, "text": "小朋友轉頭動作小於10度。"}, {"score": 0, "text": "沒有轉頭動作。"}]}, {"no": 5, "age": "", "name": "手的認識 (Regarding Hands)", "desc": "提小朋友雙手在其眼前展開，觀察其視覺變化。(若其手過短，可轉向單側搖一手。)", "options": [{"score": 2, "text": "可看著手3秒鐘。"}, {"score": 1, "text": "可看著手1-2秒鐘。"}, {"score": 0, "text": "目光無追蹤或避開。"}]}, {"no": 6, "age": "", "name": "追視球 (Tracking Ball-Left to Right)", "desc": "將小朋友抱坐於腿上，從桌子左側滾一網球至右側，說「來找球」。", "options": [{"score": 2, "text": "可追視球超過中線。"}, {"score": 1, "text": "只追視球至中線。"}, {"score": 0, "text": "沒有追視的動作。"}]}, {"no": 7, "age": "4個月", "name": "追視球 (Tracking Ball-Right to Left)", "desc": "將小朋友抱坐於腿上，從桌子右側滾一網球至左側，說「來找球」。", "options": [{"score": 2, "text": "可追視球超過中線。"}, {"score": 1, "text": "只追視球至中線。"}, {"score": 0, "text": "沒有追視的動作。"}]}, {"no": 8, "age": "", "name": "追蹤玩具 (Tracking Rattle)", "desc": "小朋友仰臥時臉朝單側，面前30公分搖一搖鈴，後慢慢搖晃超過中線達110度，觀察頭眼的動作；重覆另一邊以上動作。", "options": [{"score": 2, "text": "兩邊皆可轉頭側邊超過中線。"}, {"score": 1, "text": "只有一邊可轉頭側邊超過中線。"}, {"score": 0, "text": "轉頭側邊未到達中線。"}]}, {"no": 9, "age": "5-6個月", "name": "伸手 (Extending Arms)", "desc": "小朋友仰臥時胸前30公分搖一搖鈴，說「來拿搖鈴」。", "options": [{"score": 2, "text": "可伸直雙手向搖鈴。"}, {"score": 1, "text": "有伸手動作向搖鈴動作。"}, {"score": 0, "text": "沒有伸手動作向搖鈴動作。"}]}, {"no": 10, "age": "", "name": "手向中線 (Approaching Midline)", "desc": "小朋友仰臥時胸前30公分吊一玩具，說「來拿玩具」。", "options": [{"score": 2, "text": "至少有一手移動距中線少於10公分。"}, {"score": 1, "text": "有移動一手，但沒有向中線。"}, {"score": 0, "text": "沒有移動手的動作。"}]}, {"no": 11, "age": "7個月", "name": "手指相合 (Fingering Hands)", "desc": "小朋友仰臥時抓其前臂使手指相合，後放開手觀察其手指動作。", "options": [{"score": 2, "text": "保持手指相合5秒時間。"}, {"score": 1, "text": "保持手指相合3-4秒時間。"}, {"score": 0, "text": "保持手指相合0-2秒時間。"}]}, {"no": 12, "age": "", "name": "雙手動作 (Bring Hands Together)", "desc": "將小朋友面向桌子抱坐於腿上，將一小方塊放在其一隻手中，說「來玩積木」。", "options": [{"score": 2, "text": "可用雙手把玩方塊15秒時間。"}, {"score": 1, "text": "可用雙手把玩方塊1-14秒時間。"}, {"score": 0, "text": "無法使用雙手玩方塊。"}]}, {"no": 13, "age": "8個月", "name": "伸手 (Extending Arm)", "desc": "小朋友仰臥時胸前30公分搖一搖鈴，說「來拿搖鈴」。", "options": [{"score": 2, "text": "可伸一手超過90度去拿搖鈴，而另一手仍在地面。"}, {"score": 1, "text": "可伸一手小於90度去拿搖鈴，而另一手仍在地面。"}, {"score": 0, "text": "使用兩手去拿搖鈴。"}]}, {"no": 14, "age": "", "name": "拿方塊 (Retaining Cubes)", "desc": "將小朋友面向桌子抱坐於腿上，先說「拿積木」，拿了第1個後再拿出第二個方塊於桌上，說「再拿一個」。", "options": [{"score": 2, "text": "可拿起第2個方塊並把玩5秒時間。"}, {"score": 1, "text": "可拿起第2個方塊並把玩少於5秒時間。"}, {"score": 0, "text": "只能拿起1個方塊。"}]}, {"no": 15, "age": "", "name": "換手拿方塊 (Transferring Cubes)", "desc": "將小朋友面向桌子抱坐於腿上，先給一方塊於一手上，後置一方塊於同側桌面，說「再拿一個」。", "options": [{"score": 2, "text": "先將方塊換手，再用原來的手拿另一個。"}, {"score": 1, "text": "先將方塊換手，只伸出原來的手向另一方塊。"}, {"score": 0, "text": "沒有將方塊換手，而要去拿另一個方塊。"}]}, {"no": 16, "age": "9個月", "name": "碰小饅頭 (Touching Pellet)", "desc": "將小朋友抱坐於腿上，於桌面放一個小饅頭，說「來拿小饅頭」。", "options": [{"score": 2, "text": "可用手指去碰小饅頭。"}, {"score": 1, "text": "用掌面去碰小饅頭或只碰到小饅頭的邊。"}, {"score": 0, "text": "有伸手向小饅頭的動作。"}]}, {"no": 17, "age": "", "name": "敲杯子 (Banging Cup)", "desc": "將小朋友抱坐於腿上，示範拿杯子敲桌子3下，說「來敲杯子」。", "options": [{"score": 2, "text": "可拿杯子敲桌子3次。"}, {"score": 1, "text": "可拿杯子敲桌子1-2次。"}, {"score": 0, "text": "有拿杯子動作但沒有敲杯子。"}]}, {"no": 18, "age": "10個月", "name": "挖洞洞板 (Poking Finger)", "desc": "將小朋友抱坐於腿上，示範食指插入洞洞板，說「來挖洞洞」。", "options": [{"score": 2, "text": "可將食指放入洞內。"}, {"score": 1, "text": "只將食指插入洞內0.3公分。"}, {"score": 0, "text": "只有摸到洞洞板。"}]}, {"no": 19, "age": "", "name": "拿棒子 (Removing Pegs)", "desc": "將小朋友抱坐於腿上，先插好3根棒子，說「來拿棒子」。", "options": [{"score": 2, "text": "有拿起1個以上棒子。"}, {"score": 1, "text": "有想拿棒子的動作。"}, {"score": 0, "text": "只有碰棒子的動作。"}]}, {"no": 20, "age": "", "name": "方塊相碰 (Combining Cubes)", "desc": "將小朋友抱坐於腿上，先放一方塊於左手，後再放一積木於右邊桌面，說「拿起來敲敲」。治療師先示範。", "options": [{"score": 2, "text": "可拿起第2個方塊至中線相碰。"}, {"score": 1, "text": "可拿起第2個方塊但無法拿到中線相碰。"}, {"score": 0, "text": "無法拿起第2個方塊。"}]}, {"no": 21, "age": "", "name": "拍手 (Clapping Hands)", "desc": "與小朋友相互對坐，說「跟我一起拍拍手」。", "options": [{"score": 2, "text": "小朋友可拍手3下。"}, {"score": 1, "text": "小朋友可拍手1-2次。"}, {"score": 0, "text": "只是將手互碰。"}]}, {"no": 22, "age": "11個月", "name": "拿方塊 (Retaining Cubes)", "desc": "將小朋友面向桌子抱坐於腿上，先使其2手都拿一方塊後3秒，再將第3個方塊放在桌上，說「再拿一個積木」。", "options": [{"score": 2, "text": "兩手都拿住方塊後可伸手向第3個方塊。"}, {"score": 1, "text": "伸手要拿第3個方塊時手中的方塊會掉落。"}, {"score": 0, "text": "只看著方塊沒有動作。"}]}, {"no": 23, "age": "", "name": "拉動繩子 (Manipulating String)", "desc": "將小朋友面向桌子抱坐於腿上，將一綁繩子的玩具置出桌外，說「來拉繩子」。", "options": [{"score": 2, "text": "小朋友抓住繩子並拉動它。"}, {"score": 1, "text": "小朋友輕拍繩子。"}, {"score": 0, "text": "只有摸繩子動作。"}]}, {"no": 24, "age": "12個月", "name": "拿開棒子 (Removing Pegs)", "desc": "將小朋友抱坐於腿上，先插好3根棒子，說「來拿棒子」。", "options": [{"score": 2, "text": "可移開3個棒子。"}, {"score": 1, "text": "可移開2個棒子。"}, {"score": 0, "text": "可移開0-1個棒子。"}]}, {"no": 25, "age": "", "name": "放開方塊 (Releasing Cube)", "desc": "將小朋友抱坐於腿上，先給一方塊於其手中，說「方塊拿給我」，治療師的手在其下方約13公分處。", "options": [{"score": 2, "text": "可放方塊於治療師手中。"}, {"score": 1, "text": "方塊落在桌上。"}, {"score": 0, "text": "不放開方塊。"}]}, {"no": 26, "age": "13個月", "name": "脫襪子 (Removing Socks)", "desc": "小朋友坐在地上時說「脫掉你的襪子」。", "options": [{"score": 2, "text": "小朋友可脫下2腳的襪子。"}, {"score": 1, "text": "小朋友只脫下1腳的襪子。"}, {"score": 0, "text": "脫不下襪子或只是去摸襪子。"}]}, {"no": 27, "age": "", "name": "放小饅頭 (Placing Pellet)", "desc": "將小朋友面向桌子抱坐於腿上，桌子上放1個小饅頭及杯子，指著小饅頭說「放到杯子內」。", "options": [{"score": 2, "text": "用拇指及食指將小饅頭拿進杯子。"}, {"score": 1, "text": "用拇指及食指將小饅頭丟向杯子。"}, {"score": 0, "text": "只拿起小饅頭。"}]}, {"no": 28, "age": "", "name": "放方塊 (Placing Cube)", "desc": "將小朋友面向桌子抱坐於腿上，桌子上放7個方塊及1個杯子，說「把積木放進杯子」。", "options": [{"score": 2, "text": "可放3-7個方塊於杯子內。"}, {"score": 1, "text": "可放1-2個方塊於杯子內。"}, {"score": 0, "text": "無法放進任何一個方塊。"}]}, {"no": 29, "age": "14個月", "name": "翻書 (Turing Pages)", "desc": "將小朋友面向桌子抱坐於腿上，放一本書於桌上，說「來翻書」。", "options": [{"score": 2, "text": "小朋友會翻開書的動作。"}, {"score": 1, "text": "小朋友有想翻開書的動作。"}, {"score": 0, "text": "小朋友只是去摸書。"}]}, {"no": 30, "age": "", "name": "攪拌湯匙 (Stirring Spoon)", "desc": "將小朋友面向桌子抱坐於腿上或坐在一安全位置，示範拿湯匙在杯中攪拌，後放湯匙在杯旁，說「拿湯匙攪拌」。", "options": [{"score": 2, "text": "可拿湯匙在杯中攪拌。"}, {"score": 1, "text": "拿湯匙放在杯中或拿湯匙在杯中上下移動。"}, {"score": 0, "text": "拿著湯匙不動。"}]}, {"no": 31, "age": "15-16個月", "name": "倒小饅頭 (Removing Pellets)", "desc": "將小朋友面向桌子抱坐於腿上或坐在一安全位置，給其一裝有小饅頭的瓶子，說「倒出來」。", "options": [{"score": 2, "text": "會翻轉瓶身並倒出小饅頭。"}, {"score": 1, "text": "有想倒出小饅頭的動作。"}, {"score": 0, "text": "抓著瓶子不動。"}]}, {"no": 32, "age": "", "name": "放方塊 (Placing Cube)", "desc": "將小朋友面向桌子抱坐於腿上或坐在一安全位置，桌子上放7個方塊及1個杯子，說「把積木放進杯子」。", "options": [{"score": 2, "text": "可放7個方塊於杯子內。"}, {"score": 1, "text": "可放4-6個方塊於杯子內。"}, {"score": 0, "text": "可放0-3個方塊於杯子內。"}]}, {"no": 33, "age": "", "name": "插入棒子 (Placing Pegs)", "desc": "將小朋友面向桌子抱坐於腿上或坐在一安全位置，在桌上與洞洞板之間放3個棒子，說「將洞洞放進去」。", "options": [{"score": 2, "text": "可放3根棒子於洞洞板。"}, {"score": 1, "text": "可放1-2根棒子於洞洞板。"}, {"score": 0, "text": "只有拿起棒子動作。"}]}, {"no": 34, "age": "", "name": "湯匙敲杯子 (Tapping Spoon)", "desc": "將小朋友面向桌子抱坐於腿上或坐在一安全位置，示範拿湯匙由側邊敲杯子動作，後放湯匙在杯旁，說「跟我一樣」。", "options": [{"score": 2, "text": "可拿湯匙由側邊敲杯子。"}, {"score": 1, "text": "可拿湯匙由上方敲杯子。"}, {"score": 0, "text": "只有拿起湯匙動作。"}]}, {"no": 35, "age": "", "name": "放形狀板 (Inserting Shapes)", "desc": "將小朋友面向桌子抱坐於腿上或坐在一安全位置，在桌上與形狀板之間放該有形狀，說「將板子放進去」。", "options": [{"score": 2, "text": "可放1板子到該有的形狀板。"}, {"score": 1, "text": "可放1板子部分放到該有的形狀板。"}, {"score": 0, "text": "拿起1板子放到形狀板上。"}]}, {"no": 36, "age": "17-18個月", "name": "放小饅頭 (Placing Pellet)", "desc": "將小朋友面向桌子抱坐於腿上或坐在一安全位置，桌子上放4個小饅頭及瓶子，示範放進1個，指著其他小饅頭說「放到瓶子內」。", "options": [{"score": 2, "text": "可放1個小饅頭於瓶子內。"}, {"score": 1, "text": "有想放小饅頭於瓶子內。"}, {"score": 0, "text": "只有拾小饅頭的動作。"}]}, {"no": 37, "age": "", "name": "塗鴉 (Scribbling)", "desc": "將小朋友面向桌子抱坐於腿上或坐在一安全位置，示範在紙上畫2條5公分距離8公分直線，對小朋友說「跟我一樣畫圓」。", "options": [{"score": 2, "text": "可畫一至少2.5公分直線。"}, {"score": 1, "text": "可畫一短於2.5公分直線。"}, {"score": 0, "text": "只有拿起筆碰紙的動作。"}]}, {"no": 38, "age": "19-22個月", "name": "堆積木 (Building Tower)", "desc": "小朋友面向桌子抱坐於腿上，示範用3個方塊(Cube)堆高，在小朋友面前放3個方塊，說「堆積木堆高」。", "options": [{"score": 2, "text": "小朋友可拿2-3個方塊堆高。"}, {"score": 1, "text": "小朋友想去堆2個方塊。"}, {"score": 0, "text": "小朋友只有抓方塊。"}]}, {"no": 39, "age": "", "name": "放形狀板 (Inserting Shapes)", "desc": "將小朋友面向桌子抱坐於腿上或坐在一安全位置，在桌上與形狀板之間放該有形狀，說「將板子放進去」。", "options": [{"score": 2, "text": "小朋友放對2個正確的形狀板。"}, {"score": 1, "text": "小朋友可放對1個正確的形狀板，另2個為碰到邊緣。"}, {"score": 0, "text": "小朋友放對1個正確的形狀板。"}]}, {"no": 40, "age": "23-26個月", "name": "堆積木 (Building Tower)", "desc": "小朋友面向桌子抱坐於腿上，示範用5個方塊(Cube)堆高，在小朋友面前放5個方塊，說「堆積木堆高」。", "options": [{"score": 2, "text": "小朋友可拿5個方塊堆高。"}, {"score": 1, "text": "小朋友可拿3個方塊堆高。"}, {"score": 0, "text": "小朋友可拿2個方塊堆高。"}]}, {"no": 41, "age": "", "name": "翻書 (Turing Pages)", "desc": "將小朋友面向桌子抱坐於腿上，放一本書於桌上，說「來翻書」。", "options": [{"score": 2, "text": "可一次1頁翻開書，共翻3頁。"}, {"score": 1, "text": "可翻書一次1頁共翻2頁或一次2頁以上。"}, {"score": 0, "text": "小朋友只有翻書的動作。"}]}, {"no": 42, "age": "", "name": "放形狀板 (Inserting Shapes)", "desc": "將小朋友面向桌子抱坐於腿上或坐在一安全位置，在桌上與形狀板之間放該有形狀，說「將板子放進去」。", "options": [{"score": 2, "text": "放對3個正確的形狀板。"}, {"score": 1, "text": "可放對2個正確的形狀板，另1個為碰到邊緣。"}, {"score": 0, "text": "小朋友放對2個正確的形狀板。"}]}, {"no": 43, "age": "27-28個月", "name": "堆積木 (Building Tower)", "desc": "將小朋友面向桌子抱坐於腿上，示範用6個方塊(Cube)堆高，後再拿此6塊給小朋友，說「拿積木堆高」。", "options": [{"score": 2, "text": "可堆高6個方塊。"}, {"score": 1, "text": "可堆高5個方塊。"}, {"score": 0, "text": "可堆高4個方塊。"}]}, {"no": 44, "age": "", "name": "仿畫直線 (Imitating Vertical Stroke)", "desc": "將小朋友面向桌子抱坐於腿上或坐在一安全位置，示範在紙上畫2條5公分距離8公分直線，對小朋友說「跟我一樣畫直線」。", "options": [{"score": 2, "text": "可畫2條5公分直線(偏差角度20度內)。"}, {"score": 1, "text": "可畫2條5公分直線(偏差角度21-45度)。"}, {"score": 0, "text": "可畫2條少於5公分直線或偏差角度大於45度。"}]}, {"no": 45, "age": "29-30個月", "name": "旋開瓶蓋 (Removing Top)", "desc": "將小饅頭放在一有瓶子的瓶子內，給小朋友時說「旋開瓶蓋」。", "options": [{"score": 2, "text": "小朋友可旋開瓶蓋。"}, {"score": 1, "text": "小朋友有想旋開瓶蓋的動作。"}, {"score": 0, "text": "小朋友在搖瓶子。"}]}, {"no": 46, "age": "", "name": "堆積木 (Building Tower)", "desc": "將小朋友面向桌子抱坐於腿上，示範用10個方塊(Cube)堆高，後再拿此10塊給小朋友，說「拿積木堆高」。", "options": [{"score": 2, "text": "可堆高8個方塊。"}, {"score": 1, "text": "可堆高7個方塊。"}, {"score": 0, "text": "可堆高6個方塊。"}]}, {"no": 47, "age": "", "name": "用剪刀 (Snipping with Scissors)", "desc": "示範使用剪刀在紙上剪3刀，後給小朋友剪刀說「來剪紙」。", "options": [{"score": 2, "text": "小朋友可在紙上剪1刀。"}, {"score": 1, "text": "小朋友有打開剪刀想剪的動作。"}, {"score": 0, "text": "小朋友使用剪刀去碰紙。"}]}, {"no": 48, "age": "31-32個月", "name": "仿畫橫線 (Imitating Horizontal Stroke)", "desc": "將小朋友面向桌子抱坐於腿上或坐在一安全位置，示範在紙上畫2條5公分距離8公分直線，對小朋友說「跟我一樣畫直線」。", "options": [{"score": 2, "text": "可畫2條5公分橫線(偏差角度20度內)。"}, {"score": 1, "text": "可畫2條5公分橫線(偏差角度21-45度)。"}, {"score": 0, "text": "可畫2條少於5公分橫線或偏差角度大於45度。"}]}, {"no": 49, "age": "", "name": "穿豆豆 (Stringing Beads)", "desc": "示範先穿2個豆豆，後給小朋友4個豆豆說「跟我一樣穿豆豆」。", "options": [{"score": 2, "text": "小朋友可穿2個豆豆。"}, {"score": 1, "text": "小朋友可穿1個豆豆。"}, {"score": 0, "text": "小朋友有想穿豆豆的動作。"}]}, {"no": 50, "age": "33-34個月", "name": "摺紙 (Folding paper)", "desc": "示範將一張A5的紙摺一半，再給小朋友另一半，說「跟我一樣摺紙」。", "options": [{"score": 2, "text": "小朋友捏出摺痕。"}, {"score": 1, "text": "小朋友會將紙弄髒。"}, {"score": 0, "text": "小朋友用手去碰紙。"}]}, {"no": 51, "age": "", "name": "造火車 (Building Train)", "desc": "示範使用3個方塊橫堆，再1個在第1個方塊上，再給小朋友4個方塊，說「跟我一樣造火車」。", "options": [{"score": 2, "text": "可模堆3個方塊及堆第4個在第1個方塊上。"}, {"score": 1, "text": "可模堆3個方塊及隨意堆第4個在方塊上。"}, {"score": 0, "text": "可模堆2個方塊。"}]}, {"no": 52, "age": "35-38個月", "name": "穿豆豆 (Stringing Beads)", "desc": "示範先穿2個豆豆，後給小朋友4個豆豆說「跟我一樣穿豆豆」。", "options": [{"score": 2, "text": "小朋友可穿4個豆豆。"}, {"score": 1, "text": "小朋友可穿3個豆豆。"}, {"score": 0, "text": "小朋友可穿2個豆豆。"}]}, {"no": 53, "age": "", "name": "堆積木 (Building Tower)", "desc": "將小朋友面向桌子抱坐於腿上，示範用10個方塊(Cube)堆高，後再拿此10塊給小朋友，說「拿積木堆高」。", "options": [{"score": 2, "text": "可堆高10個方塊。"}, {"score": 1, "text": "可堆高9個方塊。"}, {"score": 0, "text": "可堆高少於9個方塊。"}]}, {"no": 54, "age": "31-32個月", "name": "造橋 (Building Bridge)", "desc": "示範使用3個方塊來造橋，後給小朋友3個方塊，說「跟我一樣造橋」。", "options": [{"score": 2, "text": "可模仿治療師造橋。"}, {"score": 1, "text": "造橋時底部2個方塊相碰或頂部的方塊沒在指定的位置。"}, {"score": 0, "text": "有想堆的動作。"}]}, {"no": 55, "age": "33-34個月", "name": "模仿畫圓 (Copying Circle)", "desc": "示範用筆畫圓，後給小朋友紙筆，說「來畫圓圈」。", "options": [{"score": 2, "text": "可畫圓但末端未相連(達距1.25公分)。"}, {"score": 1, "text": "可畫圓3/4以上但末端未相連(達距1.25-2.5公分)。"}, {"score": 0, "text": "可畫圓3/4以下或末端連距2.5公分以上。"}]}, {"no": 56, "age": "35-36個月", "name": "造牆 (Building Wall)", "desc": "示範利用方塊2下2上來造牆，後給小朋友4個方塊，說「跟我一樣造牆」。", "options": [{"score": 2, "text": "可正確造牆或兩疊方塊間無間隙。"}, {"score": 1, "text": "兩疊方塊間有間隙。"}, {"score": 0, "text": "只能1下1下的牆。"}]}, {"no": 57, "age": "37-38個月", "name": "剪紙 (Cutting paper)", "desc": "示範用剪刀將A4的紙剪成二半，後給小朋友剪刀及紙，說「跟我一樣剪紙」。", "options": [{"score": 2, "text": "可將紙剪成2半。"}, {"score": 1, "text": "只用剪刀剪到3/4。"}, {"score": 0, "text": "小朋友只拿起剪刀操作。"}]}, {"no": 58, "age": "39-40個月", "name": "穿繩板 (Lacing String)", "desc": "拿一有6個洞的繩板，示範上下交替穿繩子3個洞後，移開繩子並給小朋友，說「跟我一樣穿繩板」。", "options": [{"score": 2, "text": "小朋友穿過3個洞。"}, {"score": 1, "text": "小朋友穿過2個洞。"}, {"score": 0, "text": "小朋友穿過0-1個洞。"}]}, {"no": 59, "age": "", "name": "模仿畫十字 (Copying Cross)", "desc": "示範用筆畫十字，後給小朋友紙筆，說「來畫十字」。", "options": [{"score": 2, "text": "可畫出十字角度偏差20度內。"}, {"score": 1, "text": "可畫出十字角度偏差20度以上。"}, {"score": 0, "text": "有畫出直線但未相交。"}]}, {"no": 60, "age": "41-42個月", "name": "剪直線 (Cutting Line)", "desc": "在紙上畫出一條13公分的直線，給小朋友剪刀，說「來剪直線」。", "options": [{"score": 2, "text": "在剪完13公分的線左右偏差在1.25公分內。"}, {"score": 1, "text": "可沿著線剪在左右偏差在1.25公分以上。"}, {"score": 0, "text": "小朋友只拿起剪刀操作。"}]}, {"no": 61, "age": "47-54個月", "name": "模仿畫十字 (Copying Cross)", "desc": "示範用筆畫十字，後給小朋友紙筆，說「來畫十字」。", "options": [{"score": 2, "text": "可畫出十字角度偏差20度內，且中點兩邊相距小於0.65公分。"}, {"score": 1, "text": "可畫出十字角度偏差20度以上，或中點兩邊相距大於0.65公分。"}, {"score": 0, "text": "有畫出直線但未相交。"}]}, {"no": 62, "age": "", "name": "放小饅頭 (Dropping Pellets)", "desc": "在小朋友面前放10個小饅頭及瓶子，說「快點將小饅頭放進瓶子內」。", "options": [{"score": 2, "text": "在30秒內將10個小饅頭放進瓶子內。"}, {"score": 1, "text": "在30-60秒將5-10個小饅頭放進瓶子內。"}, {"score": 0, "text": "在60秒內將4個(或更少)小饅頭放進瓶子內。"}]}, {"no": 63, "age": "55-62個月", "name": "描畫直線 (Tracing Line)", "desc": "在小朋友面前有一13公分的水平線，給小朋友筆，說「描畫直線」。", "options": [{"score": 2, "text": "小朋友可以描畫直線，可容許偏差2次在1.25公分內。"}, {"score": 1, "text": "小朋友可以描畫直線，可容許偏差3-4次在1.25公分內。"}, {"score": 0, "text": "小朋友可以描畫直線，偏差3-4次以上。"}]}, {"no": 64, "age": "49-50個月", "name": "模仿畫方形 (Copying Square)", "desc": "示範用筆畫方形，後給小朋友紙筆，說「來畫方形」。", "options": [{"score": 2, "text": "可畫出各邊的直線，直角偏差在15度內，角處都為密合。"}, {"score": 1, "text": "線偏離水平或垂直16-30度，或有一角處都為無密合情況。"}, {"score": 0, "text": "線偏離水平或垂直超過30度，或有2個角處都為無密合情況。"}]}, {"no": 65, "age": "", "name": "剪圓圈 (Cutting Circle)", "desc": "拿指定的圓圈，給小朋友剪刀，說「來剪圓圈」。", "options": [{"score": 2, "text": "可剪3/4的圓且偏差在0.65公分內。"}, {"score": 1, "text": "可剪1/4-3/4的圓且偏差在1.25-0.65公分。"}, {"score": 0, "text": "剪圓時偏差在1.25公分以上。"}]}, {"no": 66, "age": "63-71個月", "name": "造樓梯 (Building Steps)", "desc": "示範拿6個方塊作出一個樓梯，後拿此6塊給小朋友，說「跟我一樣造樓梯」。", "options": [{"score": 2, "text": "可模仿造出一樣的樓梯。"}, {"score": 1, "text": "方塊之間有間隙或沒有正確的排列。"}, {"score": 0, "text": "沒有造出樓梯樣式。"}]}, {"no": 67, "age": "51-52個月", "name": "連線 (Connecting Dots)", "desc": "將指定有2點的紙放於小朋友面前，給其筆及指示2點，說「拿筆將此2點連線」。", "options": [{"score": 2, "text": "可連線且偏差水平在0.65公分以內。"}, {"score": 1, "text": "可連線且偏差水平在0.65-1.25公分。"}, {"score": 0, "text": "無法連線或偏差水平在1.25公分以上。"}]}, {"no": 68, "age": "53-54個月", "name": "剪方形 (Cutting Square)", "desc": "拿指定的方形，給小朋友剪刀，說「來剪方形」。", "options": [{"score": 2, "text": "可剪方形且偏差在0.65公分內。"}, {"score": 1, "text": "可剪方形且偏差在1.25-0.65公分。"}, {"score": 0, "text": "可剪方形且偏差在1.25公分以上。"}]}, {"no": 69, "age": "", "name": "造金字塔 (Building Pyramid)", "desc": "示範用6個方塊作出金字塔，後給小朋友6個方塊，說「作出跟我一樣的金字塔」。", "options": [{"score": 2, "text": "可模仿作出一樣的金字塔。"}, {"score": 1, "text": "作出金字塔時有些方塊會碰在一起。"}, {"score": 0, "text": "沒有造出金字塔樣式。"}]}, {"no": 70, "age": "55-56個月", "name": "摺紙 (Folding Paper)", "desc": "示範在A4長邊對摺，後給小朋友另一張紙，說「跟我一樣摺紙」。", "options": [{"score": 2, "text": "可摺紙而邊緣相差在0.32公分內。"}, {"score": 1, "text": "可摺紙而邊緣相差在0.32-1.25公分。"}, {"score": 0, "text": "可摺紙而邊緣相差1.25公分以上。"}]}, {"no": 71, "age": "59-60個月", "name": "著色 (Coloring Between Lines)", "desc": "給小朋友一指定的2直線，給一枝筆，說「在2線內著色」。", "options": [{"score": 2, "text": "會在區域內3/4著色且越線不超過2次。"}, {"score": 1, "text": "會在區域內3/4著色且越線不超過3-4次。"}, {"score": 0, "text": "會在區域越線超過4次。"}]}, {"no": 72, "age": "68-72個月", "name": "摺紙 (Folding Paper)", "desc": "示範拿紙對摺2次，後給小朋友一張紙，說「跟我一樣摺紙」。", "options": [{"score": 2, "text": "可對摺2次而邊緣相差在0.32公分內。"}, {"score": 1, "text": "可對摺2次而邊緣相差在0.32-1.25公分。"}, {"score": 0, "text": "可對摺2次而邊緣相差在1.25公分以上。"}]}];
+
+/* =========================================================
+   Grasping 逐項評分（下拉選單，選了描述文字直接帶入報告）
+   ========================================================= */
+/* =========================================================
+   依年齡自動標示建議起始施測題（entry point）
+   ------------------------------------------------------------
+   下面清單是計分手冊裡明確標示「Start：X個月」的題號
+   （跟每一題本身的「月齡參考欄」不同，那個每一題都有，
+   這裡只列真正的起始點）
+   ========================================================= */
+const GRASP_ENTRY_POINTS = [1,5,8,11,15,18,20,21];
+const VMI_ENTRY_POINTS = [1,4,7,9,11,13,16,18,22,24,26,29,31,36,38,40,43,45,50,52,57,61,63,66];
+
+function parseAgeRangeToMonths(str){
+  if(!str) return null;
+  const cleaned = str.replace(/個月/g,"");
+  if(cleaned.includes("-")){
+    const [a,b] = cleaned.split("-").map(Number);
+    return [a,b];
+  }
+  const n = Number(cleaned);
+  return [n,n];
+}
+
+function parseDateFlexible(str){
+  if(!str) return null;
+  const cleaned = str.trim().replace(/\//g,"-");
+  const d = new Date(cleaned);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function computeAgeMonths(dobStr, refDateStr){
+  const dob = parseDateFlexible(dobStr);
+  const ref = parseDateFlexible(refDateStr) || new Date();
+  if(!dob) return null;
+  let months = (ref.getFullYear()-dob.getFullYear())*12 + (ref.getMonth()-dob.getMonth());
+  if(ref.getDate() < dob.getDate()) months -= 1;
+  return Math.max(months, 0);
+}
+
+function findEntryItem(entryNos, itemsByNo, ageMonths){
+  if(ageMonths===null) return null;
+  let candidates = entryNos.map(no=>{
+    const item = itemsByNo[no];
+    const range = parseAgeRangeToMonths(item.age);
+    return { no, range };
+  }).filter(x=>x.range);
+  if(!candidates.length) return null;
+
+  let match = candidates.find(c => ageMonths >= c.range[0] && ageMonths <= c.range[1]);
+  if(match) return match.no;
+
+  candidates.sort((a,b)=>a.range[0]-b.range[0]);
+  if(ageMonths < candidates[0].range[0]) return candidates[0].no;
+  return candidates[candidates.length-1].no;
+}
+
+function updateAgeAndEntryPoints(){
+  const dob = g("child_dob");
+  const evalDate = g("eval_date");
+  const ageMonths = computeAgeMonths(dob, evalDate);
+  const ageEl = document.getElementById("f_ageDisplay");
+
+  if(ageMonths===null){
+    if(ageEl) ageEl.value = "";
+    highlightEntryItem("grasp_items", null);
+    highlightEntryItem("vmi_items", null);
+    return;
+  }
+  const years = Math.floor(ageMonths/12);
+  const rem = ageMonths%12;
+  if(ageEl) ageEl.value = `${years}歲${rem}個月（共${ageMonths}個月）`;
+
+  const graspByNo = {}; GRASP_ITEMS.forEach(it=>graspByNo[it.no]=it);
+  const vmiByNo = {}; VMI_ITEMS.forEach(it=>vmiByNo[it.no]=it);
+
+  const graspEntry = findEntryItem(GRASP_ENTRY_POINTS, graspByNo, ageMonths);
+  const vmiEntry = findEntryItem(VMI_ENTRY_POINTS, vmiByNo, ageMonths);
+
+  highlightEntryItem("grasp_items", graspEntry);
+  highlightEntryItem("vmi_items", vmiEntry);
+}
+
+function highlightEntryItem(containerId, entryNo){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  Array.from(el.children).forEach(row=>{
+    row.classList.remove("entry-point-row");
+    const badge = row.querySelector(".entry-badge");
+    if(badge) badge.remove();
+  });
+  if(entryNo===null) return;
+  const targetRow = el.querySelector(`[data-item-no="${entryNo}"]`);
+  if(targetRow){
+    targetRow.classList.add("entry-point-row");
+    const head = targetRow.querySelector(".grasp-item-head");
+    if(head){
+      const badge = document.createElement("span");
+      badge.className = "entry-badge";
+      badge.textContent = "★ 建議由此開始施測";
+      head.appendChild(badge);
+    }
+    targetRow.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+}
+
+function renderGraspItems(){
+  const el = document.getElementById("grasp_items");
+  el.innerHTML = "";
+  GRASP_ITEMS.forEach(item=>{
+    const key = "grasp_item_"+item.no;
+    if(state[key]===undefined) state[key] = "";
+    const row = document.createElement("div");
+    row.className = "grasp-item-row";
+    row.dataset.itemNo = item.no;
+    row.innerHTML = `<div class="grasp-item-head"><b>${item.no}. ${item.name}</b>${item.age?` <span class="grasp-item-age">（${item.age}起）</span>`:""}</div>
+      <div class="grasp-item-desc">${item.desc}</div>`;
+    const sel = document.createElement("select");
+    sel.innerHTML = `<option value="">－ 尚未評估 －</option>` +
+      item.options.map(o=>`<option value="${o.score}">${o.score}分：${o.text}</option>`).join("");
+    sel.value = state[key];
+    sel.onchange = ()=>{ state[key]=sel.value; updateGraspRawDisplay(); updatePreview(); };
+    row.appendChild(sel);
+    el.appendChild(row);
+  });
+  updateGraspRawDisplay();
+}
+function buildGraspContent(){
+  const lines = GRASP_ITEMS.map(item=>{
+    const val = state["grasp_item_"+item.no];
+    if(!val) return null;
+    const opt = item.options.find(o=>String(o.score)===String(val));
+    return opt.text.replace(/。$/,"");
+  }).filter(Boolean);
+  return lines.length ? lines.join("；")+"。" : "（尚未評估）";
+}
+/* =========================================================
+   PDMS-2 basal/ceiling 官方計分規則
+   ------------------------------------------------------------
+   basal：由小到大找「連續3題皆2分」的最後一題(題號)，
+          該題(含)以下所有題目自動視為2分
+   basal之後：以實際輸入分數加總(含0分)
+   原始分數 = basal_end×2 + basal之後所有已測項目的實際分數加總
+   ========================================================= */
+function computeBasalRawScore(items, statePrefix){
+  const administered = items
+    .map(item => ({ no: item.no, raw: state[`${statePrefix}_item_${item.no}`] }))
+    .filter(x => x.raw !== undefined && x.raw !== "")
+    .map(x => ({ no: x.no, score: Number(x.raw) }))
+    .sort((a,b) => a.no - b.no);
+
+  let streak = 0, basalEnd = null;
+  for(let i=0; i<administered.length; i++){
+    const cur = administered[i];
+    const prev = administered[i-1];
+    const consecutive = prev ? (cur.no === prev.no + 1) : true;
+    if(cur.score === 2 && consecutive){
+      streak++;
+      if(streak >= 3) basalEnd = cur.no;
+    } else if(cur.score === 2 && !consecutive){
+      streak = 1;
+    } else {
+      if(streak >= 3) break;
+      streak = 0;
+    }
+  }
+
+  let sumAbove = 0;
+  administered.forEach(x=>{
+    if(basalEnd===null || x.no > basalEnd) sumAbove += x.score;
+  });
+
+  const raw = (basalEnd!==null ? basalEnd*2 : 0) + sumAbove;
+  return { raw, basalEnd, answered: administered.length };
+}
+
+function computeGraspRawScore(){
+  const { raw, basalEnd, answered } = computeBasalRawScore(GRASP_ITEMS, "grasp");
+  return { sum: raw, answered, basalEnd };
+}
+function updateGraspRawDisplay(){
+  const { sum, answered, basalEnd } = computeGraspRawScore();
+  const el = document.getElementById("f_graspRawDisplay");
+  if(el) el.value = answered>0 ? `${sum}（basal至第${basalEnd||"－"}題，已作答${answered}/26項）` : "";
+  const ageEl = document.getElementById("f_graspDevAge");
+  if(ageEl) ageEl.value = answered>0 ? lookupAgeEquivalent("gr", sum) : "";
+}
+
+/* =========================================================
+   Visual-Motor Integration 逐項評分（同 Grasping 模式）
+   ========================================================= */
+function renderVmiItems(){
+  const el = document.getElementById("vmi_items");
+  el.innerHTML = "";
+  VMI_ITEMS.forEach(item=>{
+    const key = "vmi_item_"+item.no;
+    if(state[key]===undefined) state[key] = "";
+    const row = document.createElement("div");
+    row.className = "grasp-item-row";
+    row.dataset.itemNo = item.no;
+    row.innerHTML = `<div class="grasp-item-head"><b>${item.no}. ${item.name}</b>${item.age?` <span class="grasp-item-age">（${item.age}起）</span>`:""}</div>
+      <div class="grasp-item-desc">${item.desc}</div>`;
+    const sel = document.createElement("select");
+    sel.innerHTML = `<option value="">－ 尚未評估 －</option>` +
+      item.options.map(o=>`<option value="${o.score}">${o.score}分：${o.text}</option>`).join("");
+    sel.value = state[key];
+    sel.onchange = ()=>{ state[key]=sel.value; updateVmiRawDisplay(); updatePreview(); };
+    row.appendChild(sel);
+    el.appendChild(row);
+  });
+  updateVmiRawDisplay();
+}
+function buildVmiContent(){
+  const lines = VMI_ITEMS.map(item=>{
+    const val = state["vmi_item_"+item.no];
+    if(!val) return null;
+    const opt = item.options.find(o=>String(o.score)===String(val));
+    return opt.text.replace(/。$/,"");
+  }).filter(Boolean);
+  return lines.length ? lines.join("；")+"。" : "（尚未評估）";
+}
+function computeVmiRawScore(){
+  const { raw, basalEnd, answered } = computeBasalRawScore(VMI_ITEMS, "vmi");
+  return { sum: raw, answered, basalEnd };
+}
+function updateVmiRawDisplay(){
+  const { sum, answered, basalEnd } = computeVmiRawScore();
+  const el = document.getElementById("f_vmiRawDisplay");
+  if(el) el.value = answered>0 ? `${sum}（basal至第${basalEnd||"－"}題，已作答${answered}/72項）` : "";
+  const ageEl = document.getElementById("f_vmiDevAge");
+  if(ageEl) ageEl.value = answered>0 ? lookupAgeEquivalent("vi", sum) : "";
+}
+
+/* =========================================================
+   日常生活功能 domain 設定
+   ========================================================= */
+const DOMAIN_CONFIGS = [
+  { key:'feeding', evalLabel:'飲食評估', trainLabel:'飲食訓練',
+    milestoneGroups:[ { label:'', items:['自己會拿奶瓶喝奶或拿餅乾吃(1歲)','會用聲音或動作表達想吃東西或想喝水(1-1.5歲)','自己用湯匙吃東西(1.5-2歲)','可使用吸管喝飲料(1.5歲)','自己可以雙手拿著杯子喝水(2.5歲)','自己用筷子夾食物吃(5.5-6歲)'] } ],
+    parentFields:['feeding_milestones'],
+    trainingGoals:['會表示要吃東西','大人餵食時，練習用手扶食器或用嘴抿食物','使用吸管喝飲料','自己用湯匙吃東西或拿杯子喝水','練習用筷子吃東西','練習吃喝東西很少或不會掉落殘渣'] },
+  { key:'bathing', evalLabel:'盥洗衛生評估', trainLabel:'盥洗衛生訓練',
+    milestoneGroups:[
+      { label:'盥洗', items:['別人幫忙洗澡時，會配合抬手或抬腳(1.5-2歲)','洗手時，可雙手互相搓洗(2-3歲)','能獨立完成洗手及擦乾(4歲)','可自行刷牙(4歲)','在少許協助或監督下，可自己洗臉、洗澡及擦乾(5-6歲)'] },
+      { label:'如廁', items:['尿布濕了或髒了時，會有不舒服的表現(1歲)','可主動表達要尿尿(2.5歲)','白天可規律如廁，僅偶爾尿濕褲子或大便在褲子(3歲)','可自行完成所有如廁的步驟包括穿脫褲子、擦拭、沖水及洗手(5歲)'] }
+    ],
+    parentFields:['bathing_milestones','toileting_milestones'],
+    trainingGoals:['表示要大大或尿尿','在別人幫忙下，坐馬桶上廁所','自己去大／小便','擤鼻涕／洗臉／刷牙／漱口／洗澡／洗手'] },
+  { key:'dressing', evalLabel:'穿脫衣評估', trainLabel:'穿脫衣訓練',
+    milestoneGroups:[ { label:'', items:['可自己脫掉外套或鞋子(不包含開扣子與解鞋帶)(2歲)','可自己穿上襪子、鞋子(可能對不正、穿錯腳，不含繫鞋帶)(3歲)','可以自己穿上衣(3.5歲)','可自己脫套頭的衣服(4歲)','可以扣一般大小的扣子(4.5歲)','可完全獨立穿脫衣物(5-6歲)'] } ],
+    parentFields:['dressing_milestones'],
+    trainingGoals:['大人幫忙穿脫衣服、鞋子時，練習配合伸出手腳','練習自己穿脫無釦子的衣褲或無鞋帶的鞋子','練習自行穿脫衣物或鞋子','練習拉拉鍊、綁鞋帶、解釦子、扣釦子'] },
+  { key:'routine', evalLabel:'生活作息及參與評估', trainLabel:'生活作息及參與訓練',
+    milestoneGroups:[
+      { label:'規律作息', items:['規律睡眠或休息習慣(6-18個月)','吃飯或點心時間，自己坐到位子上準備吃東西(1.5-2歲)','在大人陪同下，自己上床、蓋被子睡覺(2-2.5歲)','自己會去完成例行常規，如洗手、擦乾，再來拿東西吃(4-4.5歲)','在提醒下，自己收玩具、去刷牙，然後上床睡覺(4-4.5歲)'] },
+      { label:'管理自己的事物', items:['依要求將玩具或書放置好或歸位(1.5-2歲)','常用物品使用後會自動歸位(2.5-3歲)','能收拾好個人的物品，如文具、玩具、餐具等到固定的位置等(4-4.5歲)'] },
+      { label:'主動協助家庭事務', items:['看到大人做事會要幫忙，如拿尿布去丟掉、拿東西去放好，或拿東西給收銀員(2歲)','摺簡單的衣物，如毛巾，但還摺不整齊(2.5歲)','接聽電話，會叫要找的人(3歲)','協助簡單的家事，如擺碗筷，擦桌子(4.5-5歲)','自己摺衣服、涼被(4.5-5歲)','可負責簡單的家事，如負責盛每一餐的飯(5.5-6歲)'] }
+    ],
+    parentFields:['routine_milestones','self_management_milestones','household_help_milestones'],
+    trainingGoals:['能夠規律作息','能夠管理自己的事物','能夠主動協助家庭事務','增加親子遊戲互動'] }
+];
+
+const PLAY_GOALS = ['功能性及探索性遊戲','想像性遊戲(如假裝吃東西、睡覺)','象徵性與角色扮演遊戲(如使用玩具當道具，假裝不同角色，不同情緒)','建構性遊戲','規則性遊戲(如123木頭人、棋藝或桌遊)','可獨自玩一段時間','可玩二人的遊戲(如親子或手足)','可參與三人以上的團體遊戲'];
+
+const CHOICE_GROUPS = {
+  fineMotorResult:{multi:false, options:["無異常","臨界發展遲緩","發展遲緩"]},
+  fineMotorTools:{multi:true, options:["臨床觀察","臨床晤談","皮巴迪動作發展量表第二版(PDMS-2)","兒童動作ABC評量表第二版(Movement ABC-2)"]},
+  muscleTone:{multi:false, options:["無異常","異常"]},
+  fineMotorTrainingNeed:{multi:false, options:["不需要","需要追蹤及諮詢","需要訓練"]},
+  fineMotorGoals:{multi:true, options:["發展慣用手","發展抓握、拈取及釋放等基本手功能","提升手部肌力、肌耐力","增進雙手使用能力/協調性","提升力量調節及動作速度之控制","提升手部操作各種工具之技巧(包括剪刀、筆、膠水等之使用)","提升手眼協調"]},
+
+  siResult:{multi:false, options:["無異常","疑似失調","失調"]},
+  siTools:{multi:true, options:["臨床觀察","臨床晤談","感覺統合臨床評量(SICO)","其他"]},
+  siRegulation:{multi:true, options:["重力不安全感","對動作有厭惡的反應","觸覺防禦","逃避感覺經驗","對味道過度反應","對聲音過度反應","分心-注意無關的刺激、難專注","活動量高"]},
+  siPosture:{multi:true, options:["未完成俯臥伸直","近端穩定度不佳","低肌肉張力","平衡調節能力不佳"]},
+  siBilateral:{multi:true, options:["慣用手混亂","跨越中線能力不佳","左右側混亂","預測性動作順序和兩側動作技巧不佳(跑跳、開合跳、同手同腳跳/不同手不同腳跳)"]},
+  siSomatodyspraxia:{multi:true, options:["未完成仰臥彎曲","需要視覺提示方能完成手指觸摸","掌內操弄能力不佳","快速交替性動作表現不佳"]},
+  siOtherCns:{multi:true, options:["有聯合動作","手指到鼻子的動作準確低","缺乏保護性反射"]},
+  siTrainingNeed:{multi:false, options:["不需要","需要追蹤及諮詢","需要訓練"]},
+  siGoals:{multi:true, options:["警醒度最佳化","感覺系統正常化(normalization)","建立對身體部位及功能的瞭解(body schema)","改善視覺動作協調功能","改善平衡及兩側協調功能","改善動作計畫功能"]},
+
+  play_evalResult:{multi:false, options:["無異常","臨界發展遲緩","發展遲緩"]},
+  play_tools:{multi:true, options:["臨床觀察","臨床晤談"]},
+  play_trainingNeed:{multi:false, options:["不需要","需要追蹤及諮詢","需要訓練"]},
+  play_goals:{multi:true, options:PLAY_GOALS}
+};
+
+// 動態把每個 domain 的 CHOICE_GROUPS 加進去
+DOMAIN_CONFIGS.forEach(d=>{
+  CHOICE_GROUPS[d.key+"_evalResult"] = {multi:false, options:["無異常","臨界發展遲緩","發展遲緩"]};
+  CHOICE_GROUPS[d.key+"_tools"] = {multi:true, options:["臨床觀察","臨床晤談"]};
+  CHOICE_GROUPS[d.key+"_trainingNeed"] = {multi:false, options:["不需要","需要追蹤及諮詢","需要訓練"]};
+  CHOICE_GROUPS[d.key+"_goals"] = {multi:true, options:d.trainingGoals};
+});
+
+const state = {};
+let currentTool = "pdms";
+
+/* =========================================================
+   選擇按鈕群組（單選/複選）
+   ========================================================= */
+function renderChoiceGroups(){
+  Object.keys(CHOICE_GROUPS).forEach(key=>{
+    const cfg = CHOICE_GROUPS[key];
+    const el = document.getElementById("c_"+key);
+    if(!el) return;
+    state[key] = state[key] !== undefined ? state[key] : (cfg.multi ? [] : "");
+    el.innerHTML = "";
+    cfg.options.forEach(opt=>{
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.className = "choice-btn"; btn.textContent = opt;
+      btn.onclick = () => toggleChoice(key, opt, cfg.multi);
+      el.appendChild(btn);
+    });
+  });
+  refreshChoiceButtonStates();
+}
+const EVAL_RESULT_TO_TRAINING_NEED = {
+  "無異常": "不需要",
+  "臨界發展遲緩": "需要追蹤及諮詢",
+  "發展遲緩": "需要訓練"
+};
+// 評估結果欄位 key -> 對應的訓練需求欄位 key
+const RESULT_TO_TRAINING_KEY_MAP = {
+  fineMotorResult: "fineMotorTrainingNeed",
+  siResult: "siTrainingNeed",
+  play_evalResult: "play_trainingNeed"
+};
+DOMAIN_CONFIGS.forEach(d=>{
+  RESULT_TO_TRAINING_KEY_MAP[d.key+"_evalResult"] = d.key+"_trainingNeed";
+});
+
+function toggleChoice(key, opt, multi){
+  if(multi){
+    const arr = state[key];
+    const idx = arr.indexOf(opt);
+    if(idx>=0) arr.splice(idx,1); else arr.push(opt);
+  } else {
+    state[key] = (state[key]===opt) ? "" : opt;
+  }
+
+  // 評估結果 → 自動帶入對應訓練需求（治療師之後仍可手動點選調整）
+  const trainingKey = RESULT_TO_TRAINING_KEY_MAP[key];
+  if(trainingKey && state[key] && EVAL_RESULT_TO_TRAINING_NEED[state[key]]){
+    state[trainingKey] = EVAL_RESULT_TO_TRAINING_NEED[state[key]];
+  }
+
+  refreshChoiceButtonStates();
+  updatePreview();
+}
+function refreshChoiceButtonStates(){
+  Object.keys(CHOICE_GROUPS).forEach(key=>{
+    const cfg = CHOICE_GROUPS[key];
+    const el = document.getElementById("c_"+key);
+    if(!el) return;
+    const val = state[key];
+    Array.from(el.children).forEach(btn=>{
+      const selected = cfg.multi ? val.includes(btn.textContent) : val===btn.textContent;
+      btn.classList.toggle("selected", selected);
+    });
+  });
+}
+
+/* =========================================================
+   O / X / V 逐項評分（自動照問卷勾選預填 O）
+   ========================================================= */
+function renderMilestoneCheckGroup(containerId, items, statePrefix, achievedSet){
+  const el = document.getElementById(containerId);
+  el.innerHTML = "";
+  items.forEach((label, i)=>{
+    const key = statePrefix+"_"+i;
+    state[key] = achievedSet.has(label);
+    const row = document.createElement("label");
+    row.className = "milestone-check-row";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = !!state[key];
+    cb.onchange = ()=>{ state[key] = cb.checked; updatePreview(); };
+    row.appendChild(cb);
+    const span = document.createElement("span");
+    span.textContent = label;
+    row.appendChild(span);
+    el.appendChild(row);
+  });
+}
+
+/* =========================================================
+   一般文字欄位
+   ========================================================= */
+const TEXT_FIELDS = [
+  "child_name","eval_date","therapist","child_dob","muscleTonePart",
+  "graspPercentile","vmiPercentile","fineMotorQuotient",
+  "graspNote","vmiNote",
+  "mabcOverallPercentage","mabcHandDexterity","mabcBilateralCoordination","mabcToolManipulation",
+  "fineMotorObservation","fineMotorSuggestion",
+  "siPostureSeconds","siSomatoSeconds","siObservation","siSuggestion",
+  "play_narrative","play_suggestion",
+  "school_status","cognitive","learning_attitude","cooperation","attention","impulse_control","instruction_understanding"
+];
+DOMAIN_CONFIGS.forEach(d=>{
+  TEXT_FIELDS.push(d.key+"_other");
+  TEXT_FIELDS.push(d.key+"_narrative");
+  TEXT_FIELDS.push(d.key+"_suggestion");
+});
+
+function onFieldInput(){
+  TEXT_FIELDS.forEach(f=>{
+    const el = document.getElementById("f_"+f);
+    if(el) state[f] = el.value;
+  });
+  updatePreview();
+}
+function setTextFields(data){
+  TEXT_FIELDS.forEach(f=>{
+    const el = document.getElementById("f_"+f);
+    if(el && data[f]!==undefined){ el.value = data[f]; state[f]=data[f]; }
+  });
+}
+
+/* =========================================================
+   評估工具切換 PDMS-2 / MABC-2
+   ========================================================= */
+function setTool(tool){
+  currentTool = tool;
+  document.getElementById("toolBtn-pdms").classList.toggle("active", tool==="pdms");
+  document.getElementById("toolBtn-mabc").classList.toggle("active", tool==="mabc");
+  document.getElementById("pdmsFineMotorBlock").style.display = tool==="pdms" ? "block":"none";
+  document.getElementById("mabcFineMotorBlock").style.display = tool==="mabc" ? "block":"none";
+  document.getElementById("mabcSensoryBlock").style.display = tool==="mabc" ? "block":"none";
+  updatePreview();
+}
+
+/* =========================================================
+   動態產生「日常生活功能」各 domain 區塊
+   ========================================================= */
+function buildDomainCardHTML(d){
+  let groupsHtml = "";
+  d.milestoneGroups.forEach((g,gi)=>{
+    if(g.label) groupsHtml += `<div class="item-group-label">${g.label}</div>`;
+    groupsHtml += `<div class="scroll-box" id="ovx_${d.key}_${gi}" style="margin-bottom:8px;"></div>`;
+  });
+  return `
+  <div class="card">
+    <h2>${d.evalLabel}</h2>
+    <div class="field"><label>整體結果</label><div class="choice-row" id="c_${d.key}_evalResult"></div></div>
+    <div class="field"><label>評估方法</label><div class="choice-row" id="c_${d.key}_tools"></div></div>
+    ${groupsHtml}
+    <div class="field"><label>其他</label><input type="text" id="f_${d.key}_other" oninput="onFieldInput()"></div>
+    <div class="field"><label>行為觀察及綜合結果</label><textarea id="f_${d.key}_narrative" oninput="onFieldInput()"></textarea></div>
+    <div class="subsection-title">${d.trainLabel}</div>
+    <div class="field"><label>訓練需求</label><div class="choice-row" id="c_${d.key}_trainingNeed"></div></div>
+    <div class="field"><label>訓練方向（可複選）</label><div class="choice-row" id="c_${d.key}_goals"></div></div>
+    <div class="field"><label>具體建議</label><textarea id="f_${d.key}_suggestion" oninput="onFieldInput()"></textarea></div>
+  </div>`;
+}
+
+function renderDomainCards(){
+  const container = document.getElementById("domainsContainer");
+  container.innerHTML = DOMAIN_CONFIGS.map(buildDomainCardHTML).join("");
+}
+
+function renderDomainOVXGroups(parentAchieved){
+  DOMAIN_CONFIGS.forEach(d=>{
+    const achievedSet = new Set();
+    d.parentFields.forEach(pf=>{
+      (parentAchieved[pf]||[]).forEach(v=>achievedSet.add(v));
+    });
+    d.milestoneGroups.forEach((g,gi)=>{
+      renderMilestoneCheckGroup(`ovx_${d.key}_${gi}`, g.items, `${d.key}_${gi}`, achievedSet);
+    });
+  });
+}
+
+/* =========================================================
+   讀取個案清單 / 載入個案資料
+   ========================================================= */
+async function loadDates(){
+  if(API_URL.includes("PASTE_YOUR")){ document.getElementById("dev-banner").style.display="block"; return; }
+  try{
+    const res = await fetch(`${API_URL}?action=listDates`);
+    const dates = await res.json();
+    const sel = document.getElementById("dateSelect");
+    sel.innerHTML = '<option value="">請選擇日期</option>';
+    dates.forEach(d=>{
+      const opt = document.createElement("option");
+      opt.value = d.date; opt.textContent = `${d.date}（${d.count}位）`;
+      sel.appendChild(opt);
+    });
+  }catch(err){ setStatus("無法載入評估日期清單，請確認 API_URL 是否設定正確。","err"); }
+}
+async function onDateChange(){
+  const date = document.getElementById("dateSelect").value;
+  const caseSel = document.getElementById("caseSelect");
+  caseSel.innerHTML = '<option value="">載入中...</option>';
+  if(!date){ caseSel.innerHTML = '<option value="">請先選日期</option>'; return; }
+  try{
+    const res = await fetch(`${API_URL}?action=listCases&date=${encodeURIComponent(date)}`);
+    const cases = await res.json();
+    caseSel.innerHTML = '<option value="">請選擇個案</option>';
+    cases.forEach(c=>{
+      const opt = document.createElement("option");
+      opt.value = c.row; opt.textContent = c.name;
+      caseSel.appendChild(opt);
+    });
+  }catch(err){ setStatus("無法載入當天個案清單。","err"); }
+}
+async function onCaseChange(){
+  const row = document.getElementById("caseSelect").value;
+  if(!row) return;
+  setStatus("載入中...","");
+  try{
+    const res = await fetch(`${API_URL}?action=getCase&row=${row}`);
+    const data = await res.json();
+    if(!data){ setStatus("找不到這筆資料。","err"); return; }
+    applyCaseData(data);
+    setStatus("已載入問卷資料，請往下確認每個欄位。","ok");
+  }catch(err){ setStatus("載入失敗，請稍後再試。","err"); }
+}
+function setStatus(msg,cls){ const el=document.getElementById("loadStatus"); el.textContent=msg; el.className=cls||""; }
+
+/* =========================================================
+   問卷資料 → 報告欄位（沿用先前確認過的組句邏輯）
+   ========================================================= */
+function joinWithOther(main, otherDetail, extraValue, extraUnit){
+  let text = main || "";
+  if(otherDetail) text += (text?"、":"")+otherDetail;
+  if(extraValue) text += `（約${extraValue}${extraUnit||""}）`;
+  return text;
+}
+function buildSchoolStatus(v){
+  let val = v["是否就學"] || "";
+  if(val==="是-其他" && v["是否就學-其他說明"]) val = `是-${v["是否就學-其他說明"]}`;
+  return val;
+}
+function buildCognitive(v){
+  let skills = (v["認知能力"]||"").split("、").map(s=>s.trim()).filter(Boolean);
+  const from=v["認知能力-數字範圍(從)"], to=v["認知能力-數字範圍(到)"];
+  if(from||to){
+    const rangeText = `數字(${from||""}～${to||""})`;
+    const idx = skills.indexOf("數字");
+    if(idx>=0) skills[idx]=rangeText; else skills.push(rangeText);
+  }
+  return skills.length ? `可以認${skills.join("、")}。` : "";
+}
+function parseAchievedList(str){
+  return (str||"").split("、").map(s=>s.trim()).filter(Boolean);
+}
+
+function applyCaseData(v){
+  const computed = {
+    child_name: v["個案姓名"] || "",
+    eval_date: v["評估日期"] || "",
+    child_dob: v["出生日期"] || "",
+    school_status: buildSchoolStatus(v),
+    cognitive: buildCognitive(v),
+    learning_attitude: v["學習態度"] || "",
+    cooperation: joinWithOther(v["配合度"], v["配合度-其他說明"]),
+    attention: joinWithOther(v["注意力"], null, v["注意力-需動作限制持續分鐘"], "分鐘"),
+    impulse_control: joinWithOther(v["衝動控制"], v["衝動控制-其他說明"]),
+    instruction_understanding: v["指令理解"] || ""
+  };
+  setTextFields(computed);
+
+  const parentAchieved = {
+    feeding_milestones: parseAchievedList(v["進食-發展里程碑"]),
+    bathing_milestones: parseAchievedList(v["盥洗-發展里程碑"]),
+    toileting_milestones: parseAchievedList(v["如廁-發展里程碑"]),
+    dressing_milestones: parseAchievedList(v["穿脫衣-其他發展里程碑"]),
+    routine_milestones: parseAchievedList(v["規律作息"]),
+    self_management_milestones: parseAchievedList(v["管理自己的事物"]),
+    household_help_milestones: parseAchievedList(v["主動協助家庭事務"])
+  };
+  renderDomainOVXGroups(parentAchieved);
+  updateAgeAndEntryPoints();
+  updatePreview();
+}
+
+/* =========================================================
+   即時預覽（表格）
+   ========================================================= */
+function g(f){ const el=document.getElementById("f_"+f); return (state[f]!==undefined?state[f]:(el?el.value:"")) || ""; }
+function cg(k){ const cfg=CHOICE_GROUPS[k]; if(!cfg) return ""; return cfg.multi ? (state[k]||[]).join("、") : (state[k]||""); }
+
+function fineMotorContent(){
+  let s = `評估結果：${cg("fineMotorResult")||"　"}\n評估工具：${cg("fineMotorTools")||"　"}\n肌肉張力異常：${cg("muscleTone")||"　"}${state.muscleTone==="異常"?"（部位："+g("muscleTonePart")+"）":""}\n`;
+  if(currentTool==="pdms"){
+    const { sum, answered } = computeGraspRawScore();
+    const vmiScore = computeVmiRawScore();
+    s += `Grasping：原始分數 ${answered>0?sum:"　"}／發展年齡 ${g("graspDevAge")||"　"}／百分位數 ${g("graspPercentile")||"　"}\n`;
+    s += `Visual-Motor Integration：原始分數 ${vmiScore.answered>0?vmiScore.sum:"　"}／發展年齡 ${g("vmiDevAge")||"　"}／百分位數 ${g("vmiPercentile")||"　"}\n`;
+    s += `發展商數：${g("fineMotorQuotient")||"　"}\n`;
+    s += `抓握能力：${buildGraspContent()}${g("graspNote")?"　"+g("graspNote"):""}\n`;
+    s += `視動整合能力：${buildVmiContent()}${g("vmiNote")?"　"+g("vmiNote"):""}\n`;
+  } else {
+    s += `整體精細動作百分比：${g("mabcOverallPercentage")||"　"}%\n`;
+    s += `手部靈活度：${g("mabcHandDexterity")||"　"}\n`;
+    s += `雙手協調表現：${g("mabcBilateralCoordination")||"　"}\n`;
+    s += `工具操作表現：${g("mabcToolManipulation")||"　"}\n`;
+  }
+  s += `一般臨床觀察：${g("fineMotorObservation")||"　"}`;
+  return s;
+}
+function fineMotorTrainingContent(){
+  return `訓練需求：${cg("fineMotorTrainingNeed")||"　"}\n訓練方向：${cg("fineMotorGoals")||"　"}\n具體建議：${g("fineMotorSuggestion")||"　"}`;
+}
+function siContent(){
+  let s = `整體結果：${cg("siResult")||"　"}\n評估工具：${cg("siTools")||"　"}\n`;
+  if(currentTool==="mabc"){
+    s += `感覺調節問題：${cg("siRegulation")||"　"}\n`;
+    s += `姿勢維持困難：${cg("siPosture")||"　"}${g("siPostureSeconds")?"（"+g("siPostureSeconds")+"）":""}\n`;
+    s += `兩側整合與順序問題：${cg("siBilateral")||"　"}\n`;
+    s += `體感覺運用能力障礙：${cg("siSomatodyspraxia")||"　"}${g("siSomatoSeconds")?"（"+g("siSomatoSeconds")+"）":""}\n`;
+    s += `其他中樞神經系統不成熟之問題：${cg("siOtherCns")||"　"}\n`;
+  }
+  s += `行為觀察及綜合結果：${g("siObservation")||"　"}`;
+  return s;
+}
+function siTrainingContent(){
+  return `訓練需求：${cg("siTrainingNeed")||"　"}\n訓練方向：${cg("siGoals")||"　"}\n具體建議：${g("siSuggestion")||"　"}`;
+}
+function domainEvalContent(d){
+  let s = `整體結果：${cg(d.key+"_evalResult")||"　"}\n評估方法：${cg(d.key+"_tools")||"　"}\n`;
+  d.milestoneGroups.forEach((grp,gi)=>{
+    const checked = grp.items.filter((label,i)=>state[`${d.key}_${gi}_${i}`]);
+    if(grp.label) s += `${grp.label}：`;
+    s += (checked.length ? checked.join('；') : "（無勾選項目）") + "\n";
+  });
+  s += `其他：${g(d.key+"_other")||"　"}\n行為觀察及綜合結果：${g(d.key+"_narrative")||"　"}`;
+  return s;
+}
+function domainTrainingContent(d){
+  return `訓練需求：${cg(d.key+"_trainingNeed")||"　"}\n訓練方向：${cg(d.key+"_goals")||"　"}\n具體建議：${g(d.key+"_suggestion")||"　"}`;
+}
+function playEvalContent(){
+  let s = `評估工具：${cg("play_tools")||"　"}\n行為觀察及綜合結果：${g("play_narrative")||"　"}\n`;
+  s += `學校教育：\n-就學狀況：${g("school_status")||"　"}\n-認知能力：${g("cognitive")||"　"}\n-學習態度：${g("learning_attitude")||"　"}\n-配合度：${g("cooperation")||"　"}\n-注意力：${g("attention")||"　"}\n-衝動控制：${g("impulse_control")||"　"}\n-指令理解：${g("instruction_understanding")||"　"}`;
+  return s;
+}
+function playTrainingContent(){
+  return `訓練需求：${cg("play_trainingNeed")||"　"}\n訓練方向：${cg("play_goals")||"　"}\n具體建議：${g("play_suggestion")||"　"}`;
+}
+
+function getReportRows(){
+  const rows = [];
+  rows.push(["知覺動作功能", `精細動作評估　${cg("fineMotorResult")||""}`, fineMotorContent()]);
+  rows.push(["", "精細動作訓練", fineMotorTrainingContent()]);
+  rows.push(["知覺動作功能", `感覺統合評估　${cg("siResult")||""}`, siContent()]);
+  rows.push(["", "感覺統合訓練", siTrainingContent()]);
+  DOMAIN_CONFIGS.forEach(d=>{
+    rows.push(["日常生活功能", `${d.evalLabel}　${cg(d.key+"_evalResult")||""}`, domainEvalContent(d)]);
+    rows.push(["", d.trainLabel, domainTrainingContent(d)]);
+    if(d.key==="dressing"){
+      // 遊戲活動固定排在穿脫衣之後、生活作息之前，符合範本順序
+      rows.push(["日常生活功能", `遊戲活動評估　${cg("play_evalResult")||""}`, playEvalContent()]);
+      rows.push(["", "遊戲訓練", playTrainingContent()]);
+    }
+  });
+  return rows;
+}
+
+function updatePreview(){
+  const rows = getReportRows();
+  const p = document.getElementById("previewPane");
+  let html = `<div class="p-title">臺北醫學大學附設醫院 職能治療 早期療育評估報告</div>`;
+  html += `<div style="margin-bottom:8px; font-size:13px;">個案姓名：${g("child_name")||"　"}　評估日期：${g("eval_date")||"　"}　評估職能治療師：${g("therapist")||"　"}</div>`;
+  html += `<table><tr><th style="width:70px;">類別</th><th style="width:110px;">評估/訓練項目</th><th>評估工具、結果與訓練方向</th></tr>`;
+  rows.forEach(r=>{
+    html += `<tr>${r[0]?`<td class="cat">${r[0]}</td>`:'<td></td>'}<td>${r[1]}</td><td>${r[2]}</td></tr>`;
+  });
+  html += `</table>`;
+  p.innerHTML = html;
+}
+
+/* =========================================================
+   匯出 Word（表格 + 標楷體，純瀏覽器端）
+   ========================================================= */
+async function exportWord(evt){
+  const btn = evt && evt.target;
+  if(btn){ btn.disabled=true; btn.textContent="載入中..."; }
+  const ok = await ensureDocxLoaded();
+  if(btn){ btn.disabled=false; btn.textContent="匯出 Word 報告"; }
+  if(!ok){
+    alert("Word 匯出功能載入失敗，請確認網路連線後重新整理頁面再試一次。若持續失敗，可能是院內網路封鎖了外部 CDN，請告知資訊室開放 cdn.jsdelivr.net 與 unpkg.com。");
+    return;
+  }
+  try{ await doExportWord_(); }
+  catch(err){ console.error(err); alert("匯出時發生問題："+err.message); }
+}
+
+async function doExportWord_(){
+  const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, BorderStyle, AlignmentType, VerticalAlign } = docx;
+  const FONT = { name: "DFKai-SB", hint: "eastAsia" }; // 標楷體（hint:eastAsia 才能讓中文正確套用此字體）
+
+  const border = { style: BorderStyle.SINGLE, size: 2, color: "999999" };
+  const borders = { top:border, bottom:border, left:border, right:border };
+
+  // 依 \n 分段，每一段變成獨立的 Paragraph，避免整段擠成一行
+  function cell(text, width, opts={}){
+    const lines = String(text||"").split("\n").filter(l=>l.length>0);
+    const paragraphs = (lines.length ? lines : [""]).map(line =>
+      new Paragraph({
+        spacing:{after:60},
+        children:[new TextRun({text: line, font:FONT, size:22, bold:opts.bold||false})]
+      })
+    );
+    return new TableCell({
+      borders, width:{size:width, type:WidthType.DXA},
+      verticalAlign: VerticalAlign.CENTER,
+      margins:{top:80,bottom:80,left:100,right:100},
+      children: paragraphs
+    });
+  }
+
+  const rows = getReportRows();
+  const tableRows = [
+    new TableRow({tableHeader:true, children:[
+      cell("類別", 1200, {bold:true}),
+      cell("評估/訓練項目", 2000, {bold:true}),
+      cell("評估工具、結果與訓練方向", 6300, {bold:true})
+    ]})
+  ];
+  rows.forEach(r=>{
+    tableRows.push(new TableRow({children:[
+      cell(r[0], 1200, {bold: !!r[0]}),
+      cell(r[1], 2000),
+      cell(r[2], 6300)
+    ]}));
+  });
+
+  const doc = new Document({
+    styles:{ default:{ document:{ run:{ font:FONT, size:22 } } } },
+    sections:[{
+      children:[
+        new Paragraph({alignment:AlignmentType.CENTER, spacing:{after:200}, children:[new TextRun({text:"北醫職能治療早期療育報告", bold:true, size:30, font:FONT})]}),
+        new Paragraph({spacing:{after:100}, children:[new TextRun({text:"個案姓名：", bold:true, font:FONT, size:22}), new TextRun({text:g("child_name")||"　", font:FONT, size:22})]}),
+        new Paragraph({spacing:{after:100}, children:[new TextRun({text:"評估日期：", bold:true, font:FONT, size:22}), new TextRun({text:g("eval_date")||"　", font:FONT, size:22})]}),
+        new Paragraph({spacing:{after:200}, children:[new TextRun({text:"評估職能治療師：", bold:true, font:FONT, size:22}), new TextRun({text:g("therapist")||"　", font:FONT, size:22})]}),
+        new Table({ width:{size:9500, type:WidthType.DXA}, columnWidths:[1200,2000,6300], rows: tableRows })
+      ]
+    }]
+  });
+
+  const blob = await Packer.toBlob(doc);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const filename = `${g("child_name")||"個案"}_${g("eval_date")||"評估日期"}_職能治療評估報告草稿.docx`;
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function resetAll(){
+  if(!confirm("確定要清空目前所有已填寫的內容嗎？")) return;
+  location.reload();
+}
+
+/* =========================================================
+   初始化
+   ========================================================= */
+renderDomainCards();
+renderChoiceGroups();
+renderGraspItems();
+renderVmiItems();
+renderDomainOVXGroups({});
+setTool("pdms");
+updateAgeAndEntryPoints();
+updatePreview();
+loadDates();
+</script>
+</body>
+</html>
